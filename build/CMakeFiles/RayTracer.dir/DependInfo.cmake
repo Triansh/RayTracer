@@ -13,6 +13,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/trios/Desktop/SEM7/VR/RayTracer/src/main.cpp" "CMakeFiles/RayTracer.dir/src/main.cpp.o" "gcc" "CMakeFiles/RayTracer.dir/src/main.cpp.o.d"
   "/home/trios/Desktop/SEM7/VR/RayTracer/src/metal.cpp" "CMakeFiles/RayTracer.dir/src/metal.cpp.o" "gcc" "CMakeFiles/RayTracer.dir/src/metal.cpp.o.d"
   "/home/trios/Desktop/SEM7/VR/RayTracer/src/sphere.cpp" "CMakeFiles/RayTracer.dir/src/sphere.cpp.o" "gcc" "CMakeFiles/RayTracer.dir/src/sphere.cpp.o.d"
+  "/home/trios/Desktop/SEM7/VR/RayTracer/src/utils.cpp" "CMakeFiles/RayTracer.dir/src/utils.cpp.o" "gcc" "CMakeFiles/RayTracer.dir/src/utils.cpp.o.d"
   )
 
 # Targets to which this target links.

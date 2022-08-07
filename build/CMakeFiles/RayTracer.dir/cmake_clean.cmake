@@ -9,6 +9,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/RayTracer.dir/src/metal.cpp.o.d"
   "CMakeFiles/RayTracer.dir/src/sphere.cpp.o"
   "CMakeFiles/RayTracer.dir/src/sphere.cpp.o.d"
+  "CMakeFiles/RayTracer.dir/src/utils.cpp.o"
+  "CMakeFiles/RayTracer.dir/src/utils.cpp.o.d"
   "RayTracer"
   "RayTracer.pdb"
 )

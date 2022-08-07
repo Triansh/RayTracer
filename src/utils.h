@@ -6,7 +6,7 @@
 #define RAYTRACER_UTILS_H
 
 #include <random>
-
+#include <glm/glm.hpp>
 
 class Utils {
 public:

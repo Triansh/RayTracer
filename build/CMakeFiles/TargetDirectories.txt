@@ -1,3 +1,0 @@
-/home/trios/Desktop/SEM7/VR/RayTracer/build/CMakeFiles/RayTracer.dir
-/home/trios/Desktop/SEM7/VR/RayTracer/build/CMakeFiles/edit_cache.dir
-/home/trios/Desktop/SEM7/VR/RayTracer/build/CMakeFiles/rebuild_cache.dir

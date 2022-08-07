@@ -1,16 +1,12 @@
 #include <iostream>
 
-#include "sphere.h"
+#include "camera.h"
 #include "metal.h"
+#include "sphere.h"
 #include "utils.h"
 
 
-constexpr int IMAGE_HEIGHT = 400;
-constexpr double ASPECT_RATIO = 1; //16.0 / 9;
-constexpr int IMAGE_WIDTH = int(ASPECT_RATIO * IMAGE_HEIGHT);
-constexpr int VIEWPORT_HEIGHT = 2;
-constexpr int VIEWPORT_WIDTH = int(ASPECT_RATIO * VIEWPORT_HEIGHT);
-constexpr int DEPTH = 20;
+constexpr int DEPTH = 10;
 constexpr int SPP = 10;
 
 void write(Color c) {
@@ -40,22 +36,13 @@ Color get_ray_color(const HitList &hitlist, const Ray &r, int depth = DEPTH) {
 //            return c;
     }
 
-    Color c1(0.8, .7, .2);
-    Color c2(.2, .5, .9);
+    Color c1(1, 1, 1);
+    Color c2(.1, .5, .8);
     float t = (r.direction().y + 1) / 2;
     return Color(glm::mix(c1.getVec(), c2.getVec(), t));
 }
 
-void render(const HitList &hitlist) {
-
-    auto focal_length = 1.0;
-
-    auto origin = glm::vec3(0);
-    auto horizontal = glm::vec3(VIEWPORT_WIDTH, 0, 0);
-    auto vertical = glm::vec3(0, VIEWPORT_HEIGHT, 0);
-    auto lower_left_corner = origin - horizontal / (float) 2
-                             - vertical / (float) 2
-                             - glm::vec3(0, 0, focal_length);
+void render(const HitList &hitlist, const Camera &cam) {
 
     std::cout << "P3\n" << IMAGE_WIDTH << ' ' << IMAGE_HEIGHT << "\n255\n";
 
@@ -67,7 +54,7 @@ void render(const HitList &hitlist) {
                 auto u = float(i + Utils::random()) / (IMAGE_HEIGHT - 1);
                 auto v = float(j + Utils::random()) / (IMAGE_WIDTH - 1);
 
-                Ray r(origin, lower_left_corner + u * vertical + v * horizontal - origin);
+                auto r = cam.get_ray(u, v);
                 pixel_color += get_ray_color(hitlist, r).getVec();
             }
             pixel_color /= SPP;
@@ -80,14 +67,18 @@ void render(const HitList &hitlist) {
 
 signed main() {
 
-    HitList hitlist;
-    auto m1 = std::make_shared<Lambertian>(Color(0.4, 0.2, 0.1));
-    auto m2 = std::make_shared<Metal>(Color(1, 0, 1), .5);
-    auto s = std::make_shared<Sphere>(glm::vec3(0, 0, -1), 0.5, m2);
-    auto g = std::make_shared<Sphere>(glm::vec3(0, 100.5, -1), 100, m1);
-    hitlist.add(s);
-    hitlist.add(g);
+    Camera cam(glm::vec3(1, 0, 0), glm::vec3(0, 0, -2), glm::vec3(0, 1, 0), 90);
 
-    render(hitlist);
+    HitList hitlist;
+    auto m1 = std::make_shared<Lambertian>(Color(0.2, 0.9, 0.4));
+    auto m2 = std::make_shared<Metal>(Color(.2, 0.2, .2), .1);
+//    auto s1 = std::make_shared<Sphere>(glm::vec3(0, 0, -1), 0.5, m2);
+//    auto s2= std::make_shared<Sphere>(glm::vec3(0, 0, -1), 0.5, m2);
+//    auto g = std::make_shared<Sphere>(glm::vec3(0, 100.5, -1), 100, m1);
+    hitlist.add(std::make_shared<Sphere>(glm::vec3(-.5, 0, -1), 0.5, m2));
+    hitlist.add(std::make_shared<Sphere>(glm::vec3(.5, 0, -1), 0.5, m2));
+    hitlist.add(std::make_shared<Sphere>(glm::vec3(0, 100.5, -1), 100, m1));
+
+    render(hitlist, cam);
     return 0;
 }

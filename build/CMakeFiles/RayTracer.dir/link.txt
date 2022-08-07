@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/RayTracer.dir/src/camera.cpp.o CMakeFiles/RayTracer.dir/src/hittable.cpp.o CMakeFiles/RayTracer.dir/src/main.cpp.o CMakeFiles/RayTracer.dir/src/metal.cpp.o CMakeFiles/RayTracer.dir/src/sphere.cpp.o -o RayTracer 

@@ -14,14 +14,17 @@
 class Sphere : public Hittable {
 
 public:
-    Sphere(glm::vec3 center, float radius, std::shared_ptr<Material> material)
-            : Hittable(std::move(material)),
+    Sphere(glm::vec3 center, float radius, std::shared_ptr<Material> material, std::shared_ptr<Utils> utils)
+            : Hittable(std::move(material), std::move(utils)),
               center_(center),
               radius_(radius) {
 
     }
+
     glm::vec3 center() const;
+
     float radius() const;
+
     bool hit(const Ray &r, HitRecord &hr, float max_time) const override;
 
 

@@ -9,7 +9,7 @@
 
 #include "ray.h"
 
-constexpr int IMAGE_HEIGHT = 256;
+constexpr int IMAGE_HEIGHT = 400;
 //constexpr float ASPECT_RATIO =  16.0 / 9;
 constexpr float ASPECT_RATIO =  1;
 constexpr int IMAGE_WIDTH = int(ASPECT_RATIO * IMAGE_HEIGHT);
@@ -17,11 +17,11 @@ constexpr int IMAGE_WIDTH = int(ASPECT_RATIO * IMAGE_HEIGHT);
 
 class Camera {
 public:
-    glm::vec3 look_at;
-    glm::vec3 up;
-    float fov;
-    float viewport_width;
-    float viewport_height;
+    glm::vec3 look_at{};
+    glm::vec3 up{};
+    float fov{};
+    float viewport_width{};
+    float viewport_height{};
 
     Camera() = default;
     Camera(glm::vec3 pos, glm::vec3 look, glm::vec3 vup, float view)
@@ -34,10 +34,10 @@ public:
         auto u = glm::normalize(glm::cross(up, w));
         auto v = glm::cross(w, u);
 
-        horizontal_ = float(viewport_width) * u;
-        vertical_ = float(viewport_height) * v;
+        horizontal_ = 10 * float(viewport_width) * u;
+        vertical_ = 10 * float(viewport_height) * v;
         lower_left_corner_ = pos - horizontal_ / (float) 2
-                             - vertical_ / (float) 2 - w;
+                             - vertical_ / (float) 2 - (float(10) * w);
     }
 
 
@@ -47,7 +47,7 @@ public:
     }
 
 private:
-    glm::vec3 pos_;
+    glm::vec3 pos_{};
     glm::vec3 horizontal_{};
     glm::vec3 vertical_{};
     glm::vec3 lower_left_corner_{};

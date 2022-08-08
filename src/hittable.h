@@ -12,6 +12,7 @@
 
 #include "ray.h"
 #include "material.h"
+#include "utils.h"
 
 struct HitRecord {
     glm::vec3 point;
@@ -20,27 +21,28 @@ struct HitRecord {
     std::shared_ptr<Material> material;
     bool front_face;
 
-    inline void set_face_normal(const Ray& r, const glm::vec3 & outward_normal) {
+    inline void set_face_normal(const Ray &r, const glm::vec3 &outward_normal) {
         front_face = dot(r.direction(), outward_normal) < 0;
-        normal = front_face ? outward_normal :-outward_normal;
+        normal = front_face ? outward_normal : -outward_normal;
     }
 };
 
 class Hittable {
 public:
-    explicit Hittable(std::shared_ptr<Material> material) : material_(std::move(material)) {}
+    explicit Hittable(std::shared_ptr<Material> material, std::shared_ptr<Utils> utils)
+            : material_(std::move(material)), utils_(std::move(utils)) {}
     virtual bool hit(const Ray &r, HitRecord &hr, float max_time) const = 0;
 
 protected:
     std::shared_ptr<Material> material_;
+    std::shared_ptr<Utils> utils_;
 };
 
 
 struct HitList {
     std::vector<std::shared_ptr<Hittable>> hittables;
-
     void add(const std::shared_ptr<Hittable> &h);
-    bool hit(const Ray & r, HitRecord &hr) const;
+    bool hit(const Ray &r, HitRecord &hr) const;
 
 };
 

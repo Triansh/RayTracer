@@ -6,7 +6,10 @@
 #define RAYTRACER_MATERIAL_H
 
 #include <glm/glm.hpp>
+#include <memory>
+
 #include "ray.h"
+#include "utils.h"
 
 typedef glm::vec3 Color;
 
@@ -38,7 +41,7 @@ typedef glm::vec3 Color;
 
 class Material {
 public:
-    explicit Material(Color c = Color(1, 0, 0)) : albedo_(c) {}
+    Material(Color c, std::shared_ptr<Utils> utils) : albedo_(c), utils_(std::move(utils)) {}
 
     virtual bool scatter(const Ray &r_in,
                          const glm::vec3 &hit_point,
@@ -54,6 +57,7 @@ public:
 
 protected:
     Color albedo_;
+    std::shared_ptr<Utils> utils_;
 
 };
 

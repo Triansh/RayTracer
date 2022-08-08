@@ -9,23 +9,13 @@
 #include "utils.h"
 
 
-glm::vec3 random_in_unit_sphere() {
-//    while (true) {
-    auto x = Utils::random(-1, 1);
-    auto y = Utils::random(-1, 1);
-    auto z = std::sqrt(1 - (x * x) - (y * y));
-    return (Utils::random(0, 1) < 0.5)
-           ? glm::normalize(glm::vec3(x, y, z))
-           : glm::normalize(glm::vec3(x, y, -z));
-}
-
 bool Metal::scatter(const Ray &r_in,
                     const glm::vec3 &hit_point,
                     const glm::vec3 &hit_point_normal,
                     Color &attenuation,
                     Ray &scattered) const {
     glm::vec3 reflected = reflect(r_in.direction(), hit_point_normal);
-    scattered = Ray(hit_point, reflected + fuzz_ * random_in_unit_sphere());
+    scattered = Ray(hit_point, reflected + fuzz_ * utils_->random_in_unit_sphere());
     attenuation = albedo_;
     return (glm::dot(scattered.direction(), hit_point_normal) > 0);
 }
@@ -40,7 +30,7 @@ bool Lambertian::scatter(const Ray &r_in,
                          const glm::vec3 &hit_point_normal,
                          Color &attenuation,
                          Ray &scattered) const {
-    auto scatter_direction = hit_point_normal + random_in_unit_sphere();
+    auto scatter_direction = hit_point_normal + utils_->random_in_unit_sphere();
 
     // Catch degenerate scatter direction
     if (glm::all(glm::lessThan(glm::abs(scatter_direction), glm::vec3(EPSILON))))

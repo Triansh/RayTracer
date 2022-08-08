@@ -7,6 +7,7 @@
 
 #include <glm/glm.hpp>
 #include <memory>
+#include <iomanip>
 
 #include "utils.h"
 
@@ -36,8 +37,10 @@ public:
             : m1_(std::move(m1)), m2_(std::move(m2)), magnitude_(magnitude) {}
 
     Color get_color(const glm::vec3 &hit_point) const override {
-        auto sign_vec = glm::sign(glm::sin(magnitude_ * hit_point));
+        auto sign_vec = glm::sign(glm::cos(magnitude_ * hit_point));
+//        std::cerr << sign_vec.x << " " << sign_vec.y << " " << sign_vec.z << " ";
         auto sign = sign_vec.x * sign_vec.y * sign_vec.z;
+//        std::cerr << std::setprecision(10) << sign << '\n';
         return sign > EPSILON ? m1_->get_color(hit_point) : m2_->get_color(hit_point);
     };
 private:

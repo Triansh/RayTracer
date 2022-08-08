@@ -33,4 +33,18 @@ private:
     float fuzz_;
 };
 
+class DiffusedLight : public  Material {
+public:
+    DiffusedLight(Color c, float intensity) : Material(c), intensity_(intensity) {}
+    bool scatter(const Ray &r_in,
+                         const glm::vec3 &hit_point,
+                         const glm::vec3 &hit_point_normal,
+                         Color &attenuation,
+                         Ray &scattered) const override;
+    glm::vec3 emit(const glm::vec3 &point) const override;
+
+private:
+    float intensity_;
+
+};
 #endif //RAYTRACER_METAL_H

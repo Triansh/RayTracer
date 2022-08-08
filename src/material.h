@@ -8,30 +8,32 @@
 #include <glm/glm.hpp>
 #include "ray.h"
 
-struct Color {
+typedef glm::vec3 Color;
 
-    Color() = default;
-
-    void clamp() {
-        r = glm::clamp(r, float(0), float(1));
-        g = glm::clamp(g, float(0), float(1));
-        b = glm::clamp(b, float(0), float(1));
-    }
-
-    Color(float red, float green, float blue) : r(red), g(green), b(blue) {
-        clamp();
-    }
-
-    explicit Color(glm::vec3 vec) : r(vec.x), g(vec.y), b(vec.z) { clamp(); }
-
-    glm::vec3 getVec() const {
-        return {r, g, b};
-    }
-
-    float r;
-    float g;
-    float b;
-};
+//struct Color : public glm::vec3 {
+//
+////    Color() = default;
+////
+////    void clamp() {
+//////        r = glm::clamp(r, float(0), float(1));
+//////        g = glm::clamp(g, float(0), float(1));
+//////        b = glm::clamp(b, float(0), float(1));
+////    }
+//
+//    Color() = default;
+//    Color(float red, float green, float blue) : glm::vec3(red, green, blue) {}
+//    explicit Color(glm::vec3 vec) : glm::vec3(vec) {}
+//
+////    glm::vec3 getVec() const {
+////        return {r, g, b};
+////    }
+//
+//    float r() { return x; };
+//
+//    float g() { return y; };
+//
+//    float b() { return z; };
+//};
 
 
 class Material {
@@ -43,6 +45,10 @@ public:
                          const glm::vec3 &hit_point_normal,
                          Color &attenuation,
                          Ray &scattered) const = 0;
+
+    virtual glm::vec3 emit(const glm::vec3 &point) const {
+        return {0, 0, 0};
+    }
 
     Color color() const { return albedo_; };
 

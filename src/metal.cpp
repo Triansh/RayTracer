@@ -2,19 +2,21 @@
 // Created by trios on 8/7/22.
 //
 
+#include <cmath>
 #include <glm/gtx/norm.hpp>
 
 #include "metal.h"
 #include "utils.h"
 
-constexpr float EPSILON = 1e-6;
 
 glm::vec3 random_in_unit_sphere() {
-    while (true) {
-        auto p = Utils::random_vec3(-1, 1);
-        if (glm::length2(p) >= 1) continue;
-        return glm::normalize(p);
-    }
+//    while (true) {
+    auto x = Utils::random(-1, 1);
+    auto y = Utils::random(-1, 1);
+    auto z = std::sqrt(1 - (x * x) - (y * y));
+    return (Utils::random(0, 1) < 0.5)
+           ? glm::normalize(glm::vec3(x, y, z))
+           : glm::normalize(glm::vec3(x, y, -z));
 }
 
 bool Metal::scatter(const Ray &r_in,
@@ -48,4 +50,16 @@ bool Lambertian::scatter(const Ray &r_in,
     attenuation = albedo_;
     return true;
 
+}
+
+bool DiffusedLight::scatter(const Ray &r_in,
+                            const glm::vec3 &hit_point,
+                            const glm::vec3 &hit_point_normal,
+                            Color &attenuation,
+                            Ray &scattered) const {
+    return false;
+}
+
+glm::vec3 DiffusedLight::emit(const glm::vec3 &point) const {
+    return albedo_ * intensity_;
 }

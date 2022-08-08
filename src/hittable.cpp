@@ -4,10 +4,6 @@
 
 #include "hittable.h"
 
-std::shared_ptr<Material> Hittable::material() const {
-    return material_;
-}
-
 void HitList::add(const std::shared_ptr<Hittable> &h) {
     hittables.push_back(h);
 }

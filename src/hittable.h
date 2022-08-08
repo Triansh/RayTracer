@@ -30,7 +30,6 @@ class Hittable {
 public:
     explicit Hittable(std::shared_ptr<Material> material) : material_(std::move(material)) {}
     virtual bool hit(const Ray &r, HitRecord &hr, float max_time) const = 0;
-    std::shared_ptr<Material> material() const;
 
 protected:
     std::shared_ptr<Material> material_;

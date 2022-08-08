@@ -5,8 +5,7 @@
 #include <glm/gtx/norm.hpp>
 
 #include "sphere.h"
-
-constexpr double eps = 1e-6;
+#include "utils.h"
 
 bool Sphere::hit(const Ray &r, HitRecord &hr, float max_time) const {
 
@@ -20,9 +19,9 @@ bool Sphere::hit(const Ray &r, HitRecord &hr, float max_time) const {
 
     auto sqrtD = sqrt(D);
     auto root = float(-b_half - sqrtD) / a;
-    if (root < eps || root > max_time) {
+    if (root < EPSILON || root > max_time) {
         root = float(-b_half + sqrtD) / a;
-        if (root < eps || root > max_time)
+        if (root < EPSILON || root > max_time)
             return false;
     }
 

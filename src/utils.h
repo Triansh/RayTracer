@@ -8,6 +8,8 @@
 #include <random>
 #include <glm/glm.hpp>
 
+constexpr float EPSILON = 1e-6;
+
 class Utils {
 public:
     static float random(float mini = 0.0, float maxi = 1.0) {

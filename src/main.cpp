@@ -5,10 +5,18 @@
 #include "sphere.h"
 #include "utils.h"
 #include "rect.h"
+#include "texture.h"
+
+constexpr int DEPTH = 10;
+constexpr int SPP = 100;
+
+Utils utils;
 
 
-constexpr int DEPTH = 100;
-constexpr int SPP = 1000;
+auto SolidLambertian = [](Color x) {
+    return std::make_shared<Lambertian>(std::make_shared<Solid>(x));
+};
+
 
 void write(Color c) {
     int ir = static_cast<int>(255.999 * c.x);
@@ -47,7 +55,7 @@ Color get_ray_color(const HitList &hitlist, const Ray &r, int depth = DEPTH) {
     return glm::mix(c1, c2, t);
 }
 
-void render(const HitList &hitlist, const Camera &cam, std::shared_ptr<Utils> &utils) {
+void render(const HitList &hitlist, const Camera &cam) {
 
     std::cout << "P3\n" << IMAGE_WIDTH << ' ' << IMAGE_HEIGHT << "\n255\n";
 
@@ -56,8 +64,8 @@ void render(const HitList &hitlist, const Camera &cam, std::shared_ptr<Utils> &u
         for (int j = IMAGE_WIDTH - 1; j >= 0; j--) {
             glm::vec3 pixel_color(0);
             for (int k = 0; k < SPP; k++) {
-                auto u = float(i + utils->random()) / (IMAGE_HEIGHT - 1);
-                auto v = float(j + utils->random()) / (IMAGE_WIDTH - 1);
+                auto u = float(i + utils.random()) / (IMAGE_HEIGHT - 1);
+                auto v = float(j + utils.random()) / (IMAGE_WIDTH - 1);
 
                 auto r = cam.get_ray(u, v);
                 pixel_color += get_ray_color(hitlist, r);
@@ -73,40 +81,49 @@ void render(const HitList &hitlist, const Camera &cam, std::shared_ptr<Utils> &u
 signed main() {
 
     Camera cam;
-    auto utils = std::make_shared<Utils>();
 
     HitList hitlist;
-    {
-        cam = Camera(glm::vec3(278, 278, -400), glm::vec3(278, 278, 0), glm::vec3(0, 1, 0), 54);
+//    {
+//        cam = Camera(glm::vec3(278, 278, -400), glm::vec3(278, 278, 0), glm::vec3(0, 1, 0), 54);
+//
+//        auto red = SolidLambertian(Color(.65, .05, .05));
+//        auto green = SolidLambertian(Color(.12, .45, .15));
+//        auto purp = SolidLambertian(Color(0.7, 0.3, 0.75));
+        auto white = SolidLambertian(Color(.73, .73, .73));
 
-        auto red = std::make_shared<Lambertian>(Color(.65, .05, .05), utils);
-        auto white = std::make_shared<Lambertian>(Color(.73, .73, .73), utils);
-        auto green = std::make_shared<Lambertian>(Color(.12, .45, .15), utils);
-        auto light = std::make_shared<DiffusedLight>(Color(1, 1, 1), 15, utils);
-
-//        hitlist.add(std::make_shared<XYRect>(-1, -4, +1, +4, 100, red, utils));
-        hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 555, red, utils));
-        hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 0, green, utils));
-        hitlist.add(std::make_shared<XZRect>(213, 227, 343, 332, 554, light, utils));
-        hitlist.add(std::make_shared<XZRect>(0, 0, 555, 555, 0, white, utils));
-        hitlist.add(std::make_shared<XZRect>(0, 0, 555, 555, 555, white, utils));
-        hitlist.add(std::make_shared<XYRect>(0, 0, 555, 555, 555, white, utils));
-    }
+        auto yellow = std::make_shared<Solid>(Color(0.8, 0.75, 0.3));
+        auto blue = std::make_shared<Solid>(Color(0.2, 0.3, 0.8));
+        auto checker = std::make_shared<Lambertian>(std::make_shared<CheckerBoard>(blue, yellow, 5));
+//
+        auto light = std::make_shared<DiffusedLight>(std::make_shared<Solid>(Color(1, 1, 1)), 15);
+//
+//        hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 0, red)); // left wall
+//        hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 555, green)); // right wall
+//
+        hitlist.add(std::make_shared<XZRect>(0, 0, 555, 555, 0, checker)); // ground
+        hitlist.add(std::make_shared<XZRect>(0, 0, 555, 555, 555, white)); // roof
+//        hitlist.add(std::make_shared<XYRect>(0, 0, 555, 555, 555, white)); // front wall
+//
+//        hitlist.add(std::make_shared<XZRect>(213, 227, 343, 332, 554, light));
+//        hitlist.add(std::make_shared<Sphere>(glm::vec3(240, 280, 300), 100, purp));
+//
+//    }
 
     {
 //        cam = Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, -2), glm::vec3(0, 1, 0), 90);
 //
-//        auto red = std::make_shared<Lambertian>(Color(.65, .05, .05, utils));
-//        auto material_ground = std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0, utils));
-//        auto material_center = std::make_shared<Lambertian>(Color(0.7, 0.3, 0.3, utils));
-//        auto material_left = std::make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.3);
-//        auto material_right = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
+//        auto material_ground = SolidLambertian(Color(0.8, 0.8, 0.0));
+////        auto material_center = std::make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
+//        auto material_left = std::make_shared<DiffusedLight>(std::make_shared<Solid>(Color(0.8, 0.8, 0.8)), 5);
+//        auto yellow = std::make_shared<Solid>(Color(0.8, 0.75, 0.3));
+//        auto blue = std::make_shared<Solid>(Color(0.2, 0.3, 0.8));
+//        auto checker = std::make_shared<Lambertian>(std::make_shared<CheckerBoard>(blue, yellow, 5));
+////        auto material_right = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
 //
-//        hitlist.add(std::make_shared<XYRect>(-1, -4, 1, 4, -2, red, utils));
-//        hitlist.add(std::make_shared<Sphere>(glm::vec3(0.0, -100.5, -1.0), 100.0, material_ground, utils));
-//        hitlist.add(std::make_shared<Sphere>(glm::vec3(0.0, 0.0, -1.0), 0.5, material_center, utils));
-//        hitlist.add(std::make_shared<Sphere>(glm::vec3(-1.0, 0.0, -1.0), 0.5, material_left, utils));
-//        hitlist.add(std::make_shared<Sphere>(glm::vec3(1.0, 0.0, -1.0), 0.5, material_right, utils));
+//        hitlist.add(std::make_shared<Sphere>(glm::vec3(0.0, -100.5, -1.0), 100.0, checker));
+////        hitlist.add(std::make_shared<Sphere>(glm::vec3(0.0, 0.0, -1.0), 0.5, material_center));
+//        hitlist.add(std::make_shared<Sphere>(glm::vec3(-1.0, 0.0, -1.0), 0.5, material_left));
+//        hitlist.add(std::make_shared<Sphere>(glm::vec3(1.0, 0.0, -1.0), 0.5, material_ground));
 
 //        auto m1 = std::make_shared<Lambertian>(Color(0.2, 0.8, 0.4));
 //        auto m2 = std::make_shared<Metal>(Color(1, 0, 1), 0);
@@ -118,6 +135,6 @@ signed main() {
 //        hitlist.add(std::make_shared<Sphere>(glm::vec3(0, 100.5, -1), 100, m1));
     }
 
-    render(hitlist, cam, utils);
+    render(hitlist, cam);
     return 0;
 }

@@ -14,8 +14,8 @@
 class Sphere : public Hittable {
 
 public:
-    Sphere(glm::vec3 center, float radius, std::shared_ptr<Material> material, std::shared_ptr<Utils> utils)
-            : Hittable(std::move(material), std::move(utils)),
+    Sphere(glm::vec3 center, float radius, std::shared_ptr<Material> material)
+            : Hittable(std::move(material)),
               center_(center),
               radius_(radius) {
 

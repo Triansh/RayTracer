@@ -29,13 +29,12 @@ struct HitRecord {
 
 class Hittable {
 public:
-    explicit Hittable(std::shared_ptr<Material> material, std::shared_ptr<Utils> utils)
-            : material_(std::move(material)), utils_(std::move(utils)) {}
+    explicit Hittable(std::shared_ptr<Material> material)
+            : material_(std::move(material)) {}
     virtual bool hit(const Ray &r, HitRecord &hr, float max_time) const = 0;
 
 protected:
     std::shared_ptr<Material> material_;
-    std::shared_ptr<Utils> utils_;
 };
 
 

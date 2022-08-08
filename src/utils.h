@@ -45,5 +45,6 @@ private:
 
 };
 
+extern Utils utils;
 
 #endif //RAYTRACER_UTILS_H

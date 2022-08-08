@@ -15,8 +15,8 @@ bool Metal::scatter(const Ray &r_in,
                     Color &attenuation,
                     Ray &scattered) const {
     glm::vec3 reflected = reflect(r_in.direction(), hit_point_normal);
-    scattered = Ray(hit_point, reflected + fuzz_ * utils_->random_in_unit_sphere());
-    attenuation = albedo_;
+    scattered = Ray(hit_point, reflected + fuzz_ * utils.random_in_unit_sphere());
+    attenuation = texture_->get_color(hit_point);
     return (glm::dot(scattered.direction(), hit_point_normal) > 0);
 }
 
@@ -30,14 +30,14 @@ bool Lambertian::scatter(const Ray &r_in,
                          const glm::vec3 &hit_point_normal,
                          Color &attenuation,
                          Ray &scattered) const {
-    auto scatter_direction = hit_point_normal + utils_->random_in_unit_sphere();
+    auto scatter_direction = hit_point_normal + utils.random_in_unit_sphere();
 
     // Catch degenerate scatter direction
     if (glm::all(glm::lessThan(glm::abs(scatter_direction), glm::vec3(EPSILON))))
         scatter_direction = hit_point_normal;
 
     scattered = Ray(hit_point, scatter_direction);
-    attenuation = albedo_;
+    attenuation = texture_->get_color(hit_point);
     return true;
 
 }
@@ -51,5 +51,6 @@ bool DiffusedLight::scatter(const Ray &r_in,
 }
 
 glm::vec3 DiffusedLight::emit(const glm::vec3 &point) const {
-    return albedo_ * intensity_;
+    return texture_->get_color(point) * intensity_;
 }
+

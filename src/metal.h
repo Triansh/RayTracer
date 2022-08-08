@@ -12,7 +12,7 @@
 
 class Lambertian : public Material {
 public:
-    Lambertian(Color c, std::shared_ptr<Utils> utils) : Material(c, std::move(utils)) {}
+    explicit Lambertian(std::shared_ptr<Texture> texture) : Material(std::move(texture)) {}
 
     bool scatter(const Ray &r_in,
                  const glm::vec3 &hit_point,
@@ -24,7 +24,7 @@ public:
 
 class Metal : public Material {
 public:
-    Metal(Color c, float fuzz, std::shared_ptr<Utils> utils) : Material(c, std::move(utils)), fuzz_(fuzz) {}
+    Metal(std::shared_ptr<Texture> texture, float fuzz) : Material(std::move(texture)), fuzz_(fuzz) {}
 
     static glm::vec3 reflect(glm::vec3 v, glm::vec3 n);
 
@@ -40,8 +40,8 @@ private:
 
 class DiffusedLight : public Material {
 public:
-    DiffusedLight(Color c, float intensity, std::shared_ptr<Utils> utils) : Material(c, std::move(utils)),
-                                                                            intensity_(intensity) {}
+    DiffusedLight(std::shared_ptr<Texture> texture, float intensity)
+            : Material(std::move(texture)), intensity_(intensity) {}
 
     bool scatter(const Ray &r_in,
                  const glm::vec3 &hit_point,

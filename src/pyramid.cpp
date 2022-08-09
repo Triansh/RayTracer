@@ -4,27 +4,28 @@
 
 #include "pyramid.h"
 
-#include <cmath>
-
 bool Triangle::hit(const Ray &r, HitRecord &hr, float max_time) const {
     auto v2_v1 = v2_ - v1_;
     auto v3_v1 = v3_ - v1_;
     auto p_vec = glm::cross(r.direction(), v3_v1);
     float det = glm::dot(v2_v1, p_vec);
-    if (det < EPSILON) return false;
+    if (std::fabs(det) < EPSILON) return false;
 
     float inv_det = 1 / det;
 
     auto t_vec = r.origin() - v1_;
     auto u = glm::dot(t_vec, p_vec) * inv_det;
-    if (u < EPSILON || u > 1) return false;
+    if (u < EPSILON || u > 1 + EPSILON) return false;
 
     auto q_vec = glm::cross(t_vec, v2_v1);
     auto v = glm::dot(r.direction(), q_vec) * inv_det;
-    if (v < EPSILON || u + v > 1) return false;
+    if (v < EPSILON || u + v > 1 + EPSILON) return false;
 
-    hr.time = glm::dot(v3_v1, q_vec) * inv_det;
-    hr.point = r.at(hr.time);
+    auto time = glm::dot(v3_v1, q_vec) * inv_det;
+    if (time < EPSILON or time > max_time) return false;
+
+    hr.time = time;
+    hr.point = r.at(time);
     hr.set_face_normal(r, normal);
     return true;
 }

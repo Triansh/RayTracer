@@ -1,4 +1,6 @@
 #include <iostream>
+#include <thread>
+
 
 #include "camera.h"
 #include "material_types.h"
@@ -10,7 +12,8 @@
 #include "box.h"
 
 constexpr int DEPTH = 100;
-constexpr int SPP = 1000;
+constexpr int SPP = 2000;
+constexpr int MAX_THREADS = 20;
 
 Utils utils;
 
@@ -20,100 +23,113 @@ auto SolidLambertian = [](Color x) {
 };
 
 
-void write(Color c) {
-    int ir = static_cast<int>(255.999 * c.x);
-    int ig = static_cast<int>(255.999 * c.y);
-    int ib = static_cast<int>(255.999 * c.z);
-    std::cout << ir << ' ' << ig << ' ' << ib << '\n';
-}
+class RayTracer {
 
-Color get_ray_color(const HitList &hitlist, const Ray &r, int depth = DEPTH) {
+public:
+    RayTracer() {
+        image.assign(IMAGE_HEIGHT, std::vector<glm::vec3>(IMAGE_WIDTH, glm::vec3(0)));
+        create_scene();
+    }
 
-    if (depth <= 0) return glm::vec3(0);
+    static void write(Color c) {
+        int ir = static_cast<int>(255.999 * c.x);
+        int ig = static_cast<int>(255.999 * c.y);
+        int ib = static_cast<int>(255.999 * c.z);
+        std::cout << ir << ' ' << ig << ' ' << ib << '\n';
+    }
 
-    HitRecord hr{};
-    if (hitlist.hit(r, hr)) {
-        Ray scattered{};
-        Color attenuation{};
-        auto emit = hr.material->emit(hr.point);
-        if (hr.material->scatter(r, hr.point, hr.normal, attenuation, scattered)) {
+    Color get_ray_color(const Ray &r, int depth = DEPTH) {
+        if (depth <= 0) return glm::vec3(0);
 
-            return Color(emit +
-                         (attenuation
-                          * get_ray_color(hitlist, scattered, depth - 1)));
-        }
-        return emit;
+        HitRecord hr{};
+        if (hitlist.hit(r, hr)) {
+            Ray scattered{};
+            Color attenuation{};
+            auto emit = hr.material->emit(hr.point);
+            if (hr.material->scatter(r, hr.point, hr.normal, attenuation, scattered)) {
+
+                return Color(emit +
+                             (attenuation
+                              * get_ray_color(scattered, depth - 1)));
+            }
+            return emit;
 //        auto N = glm::normalize(hr.point - r.origin());
 //        return Color(float(0.5) * glm::vec3(N.x + 1, N.y + 1, N.z + 1));
 //            auto c = hr.material->color();
 //            return c;
+        }
+
+        Color c1(1, 1, 1);
+        Color c2(.1, .5, .8);
+        float t = (r.direction().y + 1) / 2;
+//    return c2;
+        return {0, 0, 0};
+        return glm::mix(c1, c2, t);
     }
 
-    Color c1(1, 1, 1);
-    Color c2(.1, .5, .8);
-    float t = (r.direction().y + 1) / 2;
-//    return c2;
-    return {0, 0, 0};
-    return glm::mix(c1, c2, t);
-}
-
-void render(const HitList &hitlist, const Camera &cam) {
-
-    std::cout << "P3\n" << IMAGE_WIDTH << ' ' << IMAGE_HEIGHT << "\n255\n";
-
-    for (int i = IMAGE_HEIGHT - 1; i >= 0; i--) {
-        std::cerr << "\rScanlines remaining: " << i << ' ' << std::flush;
+    static void thread_exec(RayTracer *tracer, int rowIndex) {
         for (int j = IMAGE_WIDTH - 1; j >= 0; j--) {
-            glm::vec3 pixel_color(0);
             for (int k = 0; k < SPP; k++) {
-                auto u = float(i + utils.random()) / (IMAGE_HEIGHT - 1);
+                auto u = float(rowIndex + utils.random()) / (IMAGE_HEIGHT - 1);
                 auto v = float(j + utils.random()) / (IMAGE_WIDTH - 1);
 
-                auto r = cam.get_ray(u, v);
-                pixel_color += get_ray_color(hitlist, r);
+                auto r = tracer->cam.get_ray(u, v);
+                tracer->image[rowIndex][j] += tracer->get_ray_color(r);
             }
-            pixel_color /= SPP;
+            tracer->image[rowIndex][j] /= SPP;
             // Gamma correction
-            pixel_color = sqrt(pixel_color);
-            write(Color(pixel_color));
+            tracer->image[rowIndex][j] = sqrt(tracer->image[rowIndex][j]);
         }
     }
-}
 
-signed main() {
+    void render() {
 
-    Camera cam;
-
-    HitList hitlist;
-    {
-        cam = Camera(glm::vec3(208, 250, -500), glm::vec3(278, 250, 0), glm::vec3(0, 1, 0), 54);
-//
-        auto red = SolidLambertian(Color(.65, .05, .05));
-        auto green = SolidLambertian(Color(.12, .45, .15));
-        auto purp = SolidLambertian(Color(0.7, 0.3, 0.75));
-        auto white = SolidLambertian(Color(.73, .73, .73));
-
-        auto yellow = std::make_shared<Solid>(Color(0.8, 0.75, 0.3));
-        auto blue = std::make_shared<Solid>(Color(0.1, 0.1, 0.9));
-        auto checker = std::make_shared<Lambertian>(std::make_shared<CheckerBoard>(blue, yellow, .05));
-//
-        auto light = std::make_shared<DiffusedLight>(std::make_shared<Solid>(Color(1, 1, 1)), 60);
-//
-        hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 0, red)); // left wall
-        hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 555, green)); // right wall
-//
-        hitlist.add(std::make_shared<XZRect>(0, 0, 555, 555, 0, checker)); // ground
-        hitlist.add(std::make_shared<XZRect>(0, 0, 555, 555, 555, white)); // roof
-        hitlist.add(std::make_shared<XYRect>(0, 0, 555, 555, 555, white)); // front wall
-//
-        hitlist.add(std::make_shared<XZRect>(213, 227, 343, 332, 554, light));
-        hitlist.add(std::make_shared<Sphere>(glm::vec3(200, 280, 300), 100, purp));
-        hitlist.add(std::make_shared<Pyramid>(350, 0, 450, 150, 200, 150, purp));
-        hitlist.add(std::make_shared<Box>(glm::vec3(200, 0, 100), glm::vec3(400, 100, 350), purp));
+        std::cout << "P3\n" << IMAGE_WIDTH << ' ' << IMAGE_HEIGHT << "\n255\n";
+        std::vector<std::thread> ts;
+        for (int i = IMAGE_HEIGHT - 1; i >= 0; i -= MAX_THREADS) {
+            std::cerr << "\rScanlines remaining: " << i << ' ' << std::flush;
+            for (int j = 0; j < MAX_THREADS; j++) {
+                ts.emplace_back(thread_exec, this, i - j);
+            }
+            for (auto &thr: ts) thr.join();
+            ts.clear();
+            for (int j = 0; j < MAX_THREADS; j++) {
+                for (int k = IMAGE_HEIGHT - 1; k >= 0; k--) {
+                    write(image[i - j][k]);
+                }
+            }
+        }
 
     }
 
-    {
+    void create_scene() {
+        {
+            cam = Camera(glm::vec3(208, 250, -500), glm::vec3(278, 250, 0), glm::vec3(0, 1, 0), 54);
+//
+            auto red = SolidLambertian(Color(.65, .05, .05));
+            auto green = SolidLambertian(Color(.12, .45, .15));
+            auto purp = SolidLambertian(Color(0.7, 0.3, 0.75));
+            auto white = SolidLambertian(Color(.73, .73, .73));
+            auto iron = SolidLambertian(Color(0.6314, .6157, .5804));
+            auto blue_glass = SolidLambertian(Color(0.1373, .6745, .7686));
+
+            auto yellow = std::make_shared<Solid>(Color(0.8, 0.75, 0.3));
+            auto blue = std::make_shared<Solid>(Color(0.1, 0.1, 0.9));
+            auto checker = std::make_shared<Lambertian>(std::make_shared<CheckerBoard>(blue, yellow, .05));
+            auto light = std::make_shared<DiffusedLight>(std::make_shared<Solid>(Color(1, 1, 1)), 60);
+            hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 0, red)); // left wall
+            hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 555, green)); // right wall
+            hitlist.add(std::make_shared<XZRect>(0, 0, 555, 555, 0, checker)); // ground
+            hitlist.add(std::make_shared<XZRect>(0, 0, 555, 555, 555, white)); // roof
+            hitlist.add(std::make_shared<XYRect>(0, 0, 555, 555, 555, white)); // front wall
+            hitlist.add(std::make_shared<XZRect>(213, 227, 343, 332, 554, light)); // light
+            hitlist.add(std::make_shared<Sphere>(glm::vec3(150, 280, 300), 80, purp));
+            hitlist.add(std::make_shared<Pyramid>(300, 120, 420, 280, 200, 160, blue_glass));
+            hitlist.add(std::make_shared<Box>(glm::vec3(200, 0, 100), glm::vec3(400, 100, 350), iron));
+
+        }
+
+        {
 //        cam = Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, -2), glm::vec3(0, 1, 0), 90);
 //
 //        auto material_ground = SolidLambertian(Color(0.8, 0.8, 0.0));
@@ -137,8 +153,21 @@ signed main() {
 //        hitlist.add(std::make_shared<Sphere>(glm::vec3(0, 0, -1), 0.5, m2));
 //        hitlist.add(std::make_shared<Sphere>(glm::vec3(.5, 0, -1), 0.5, m2));
 //        hitlist.add(std::make_shared<Sphere>(glm::vec3(0, 100.5, -1), 100, m1));
+        }
     }
 
-    render(hitlist, cam);
+
+private:
+    std::vector<std::vector<glm::vec3>> image;
+    HitList hitlist;
+    Camera cam;
+
+};
+
+signed main() {
+
+    auto tracer = RayTracer();
+    tracer.render();
+
     return 0;
 }

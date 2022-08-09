@@ -2,10 +2,9 @@
 // Created by trios on 8/7/22.
 //
 
-#include <cmath>
 #include <glm/gtx/norm.hpp>
 
-#include "metal.h"
+#include "material_types.h"
 #include "utils.h"
 
 

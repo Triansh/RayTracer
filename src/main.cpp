@@ -1,11 +1,13 @@
 #include <iostream>
 
 #include "camera.h"
-#include "metal.h"
+#include "material_types.h"
 #include "sphere.h"
 #include "utils.h"
 #include "rect.h"
 #include "texture.h"
+#include "pyramid.h"
+#include "box.h"
 
 constexpr int DEPTH = 100;
 constexpr int SPP = 1000;
@@ -84,7 +86,7 @@ signed main() {
 
     HitList hitlist;
     {
-        cam = Camera(glm::vec3(278, 278, -400), glm::vec3(278, 278, 0), glm::vec3(0, 1, 0), 54);
+        cam = Camera(glm::vec3(208, 250, -500), glm::vec3(278, 250, 0), glm::vec3(0, 1, 0), 54);
 //
         auto red = SolidLambertian(Color(.65, .05, .05));
         auto green = SolidLambertian(Color(.12, .45, .15));
@@ -95,7 +97,7 @@ signed main() {
         auto blue = std::make_shared<Solid>(Color(0.1, 0.1, 0.9));
         auto checker = std::make_shared<Lambertian>(std::make_shared<CheckerBoard>(blue, yellow, .05));
 //
-        auto light = std::make_shared<DiffusedLight>(std::make_shared<Solid>(Color(1, 1, 1)), 20);
+        auto light = std::make_shared<DiffusedLight>(std::make_shared<Solid>(Color(1, 1, 1)), 60);
 //
         hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 0, red)); // left wall
         hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 555, green)); // right wall
@@ -105,7 +107,9 @@ signed main() {
         hitlist.add(std::make_shared<XYRect>(0, 0, 555, 555, 555, white)); // front wall
 //
         hitlist.add(std::make_shared<XZRect>(213, 227, 343, 332, 554, light));
-        hitlist.add(std::make_shared<Sphere>(glm::vec3(240, 280, 300), 100, purp));
+        hitlist.add(std::make_shared<Sphere>(glm::vec3(200, 280, 300), 100, purp));
+        hitlist.add(std::make_shared<Pyramid>(350, 0, 450, 150, 200, 150, purp));
+        hitlist.add(std::make_shared<Box>(glm::vec3(200, 0, 100), glm::vec3(400, 100, 350), purp));
 
     }
 

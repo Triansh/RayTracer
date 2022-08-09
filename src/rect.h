@@ -9,10 +9,20 @@
 
 #include "hittable.h"
 
-class XYRect : public Hittable {
+class Rect : public Hittable {
 public:
+    Rect(): Hittable(nullptr) {}
+    explicit Rect(std::shared_ptr<Material> m) : Hittable(std::move(m)) {}
+
+    bool hit(const Ray &r, HitRecord &hr, float max_time) const override = 0;
+};
+
+class XYRect : public Rect {
+public:
+    XYRect() = default;
+
     XYRect(float x1, float y1, float x2, float y2, float k, std::shared_ptr<Material> m)
-            : Hittable(std::move(m)), x1_(x1), y1_(y1), x2_(x2), y2_(y2), k_(k) {}
+            : Rect(std::move(m)), x1_(x1), y1_(y1), x2_(x2), y2_(y2), k_(k) {}
 
     bool hit(const Ray &r, HitRecord &hr, float max_time) const override;
 
@@ -23,10 +33,12 @@ private:
 
 };
 
-class YZRect : public Hittable {
+class YZRect : public Rect {
 public:
+    YZRect() = default;
+
     YZRect(float y1, float z1, float y2, float z2, float k, std::shared_ptr<Material> m)
-            : Hittable(std::move(m)), z1_(z1), y1_(y1), z2_(z2), y2_(y2), k_(k) {}
+            : Rect(std::move(m)), z1_(z1), y1_(y1), z2_(z2), y2_(y2), k_(k) {}
 
     bool hit(const Ray &r, HitRecord &hr, float max_time) const override;
 
@@ -38,10 +50,12 @@ private:
 };
 
 
-class XZRect : public Hittable {
+class XZRect : public Rect {
 public:
+    XZRect() = default;
+
     XZRect(float x1, float z1, float x2, float z2, float k, std::shared_ptr<Material> m)
-            : Hittable(std::move(m)), x1_(x1), z1_(z1), x2_(x2), z2_(z2), k_(k) {}
+            : Rect(std::move(m)), x1_(x1), z1_(z1), x2_(x2), z2_(z2), k_(k) {}
 
     bool hit(const Ray &r, HitRecord &hr, float max_time) const override;
 

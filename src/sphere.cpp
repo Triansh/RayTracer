@@ -33,10 +33,4 @@ bool Sphere::hit(const Ray &r, HitRecord &hr, float max_time) const {
     return true;
 }
 
-glm::vec3 Sphere::center() const {
-    return center_;
-}
 
-float Sphere::radius() const {
-    return radius_;
-}

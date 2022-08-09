@@ -20,11 +20,6 @@ public:
               radius_(radius) {
 
     }
-
-    glm::vec3 center() const;
-
-    float radius() const;
-
     bool hit(const Ray &r, HitRecord &hr, float max_time) const override;
 
 

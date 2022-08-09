@@ -2,8 +2,8 @@
 // Created by trios on 8/7/22.
 //
 
-#ifndef RAYTRACER_METAL_H
-#define RAYTRACER_METAL_H
+#ifndef RAYTRACER_MATERIAL_TYPES_H
+#define RAYTRACER_MATERIAL_TYPES_H
 
 #include <glm/glm.hpp>
 #include <utility>
@@ -56,4 +56,4 @@ private:
 
 };
 
-#endif //RAYTRACER_METAL_H
+#endif //RAYTRACER_MATERIAL_TYPES_H

@@ -13,11 +13,11 @@ bool HitList::hit(const Ray &r, HitRecord &hr) const {
     auto closest_so_far = float(LONG_LONG_MAX);
 
     for (const auto &object: hittables) {
-        HitRecord temp_rec{};
-        if (object->hit(r, temp_rec, closest_so_far)) {
+//        HitRecord temp_rec{};
+        if (object->hit(r, hr, closest_so_far)) {
             hit_anything = true;
-            closest_so_far = temp_rec.time;
-            hr = temp_rec;
+            closest_so_far = hr.time;
+//            hr = hr;
         }
     }
     return hit_anything;

@@ -11,8 +11,8 @@
 #include "pyramid.h"
 #include "box.h"
 
-constexpr int DEPTH = 100;
-constexpr int SPP = 2000;
+constexpr int DEPTH = 10;
+constexpr int SPP = 200;
 constexpr int MAX_THREADS = 32;
 
 Utils utils;
@@ -45,8 +45,8 @@ public:
         if (hitlist.hit(r, hr)) {
             Ray scattered{};
             Color attenuation{};
-            auto emit = hr.material->emit(hr.point);
-            if (hr.material->scatter(r, hr.point, hr.normal, attenuation, scattered)) {
+            auto emit = hr.material->emittedValue(hr.point);
+            if (hr.material->scatter_ray(r, hr.point, hr.normal, attenuation, scattered)) {
 
                 return Color(emit +
                              (attenuation
@@ -103,6 +103,7 @@ public:
     }
 
     void create_scene() {
+
         {
             cam = Camera(glm::vec3(208, 250, -500), glm::vec3(278, 250, 0), glm::vec3(0, 1, 0), 54);
 //            cam = Camera(glm::vec3(278, 554, 279.5), glm::vec3(278, 553, 279.5), glm::vec3(1, 0, 0), 90);
@@ -118,15 +119,15 @@ public:
             auto blue = std::make_shared<Solid>(Color(0.1, 0.1, 0.9));
             auto checker = std::make_shared<Lambertian>(std::make_shared<CheckerBoard>(blue, yellow, .05));
             auto light = std::make_shared<DiffusedLight>(std::make_shared<Solid>(Color(1, 1, 1)), 60);
-            hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 0, red)); // left wall
-            hitlist.add(std::make_shared<YZRect>(0, 0, 555, 555, 555, green)); // right wall
-            hitlist.add(std::make_shared<XZRect>(0, 0, 555, 555, 0, checker)); // ground
-            hitlist.add(std::make_shared<XZRect>(0, 0, 555, 555, 555, white)); // roof
-            hitlist.add(std::make_shared<XYRect>(0, 0, 555, 555, 555, white)); // front wall
-            hitlist.add(std::make_shared<XZRect>(213, 227, 343, 332, 554, light)); // light
-            hitlist.add(std::make_shared<Sphere>(glm::vec3(150, 280, 300), 80, purp));
-            hitlist.add(std::make_shared<Pyramid>(270, 150, 390, 230, 200, 160, blue_glass));
-            hitlist.add(std::make_shared<Box>(glm::vec3(250, 0, 250), glm::vec3(480, 100, 480), iron));
+            hitlist.add(std::make_shared<YZRect<Lambertian>>(0, 0, 555, 555, 0, red)); // left wall
+            hitlist.add(std::make_shared<YZRect<Lambertian>>(0, 0, 555, 555, 555, green)); // right wall
+            hitlist.add(std::make_shared<XZRect<Lambertian>>(0, 0, 555, 555, 0, checker)); // ground
+            hitlist.add(std::make_shared<XZRect<Lambertian>>(0, 0, 555, 555, 555, white)); // roof
+            hitlist.add(std::make_shared<XYRect<Lambertian>>(0, 0, 555, 555, 555, white)); // front wall
+            hitlist.add(std::make_shared<XZRect<DiffusedLight>>(213, 227, 343, 332, 554, light)); // light
+            hitlist.add(std::make_shared<Sphere<Lambertian>>(glm::vec3(150, 280, 300), 80, purp));
+            hitlist.add(std::make_shared<Pyramid<Lambertian>>(270, 150, 390, 230, 200, 160, blue_glass));
+            hitlist.add(std::make_shared<Box<Lambertian>>(glm::vec3(250, 0, 250), glm::vec3(480, 100, 480), iron));
         }
 
         {

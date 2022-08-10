@@ -19,10 +19,26 @@ bool Metal::scatter(const Ray &r_in,
     return (glm::dot(scattered.direction(), hit_point_normal) > 0);
 }
 
+glm::vec3 Metal::emit(const glm::vec3 &point) const {
+    return glm::vec3(0);
+}
+
 glm::vec3 Metal::reflect(const glm::vec3 v, const glm::vec3 n) {
     return v - (2 * glm::dot(v, n) * n);
 }
 
+
+bool DiffusedLight::scatter(const Ray &r_in,
+                            const glm::vec3 &hit_point,
+                            const glm::vec3 &hit_point_normal,
+                            Color &attenuation,
+                            Ray &scattered) const {
+    return false;
+}
+
+glm::vec3 DiffusedLight::emit(const glm::vec3 &point) const {
+    return texture_->get_color(point) * intensity_;
+}
 
 bool Lambertian::scatter(const Ray &r_in,
                          const glm::vec3 &hit_point,
@@ -41,15 +57,8 @@ bool Lambertian::scatter(const Ray &r_in,
 
 }
 
-bool DiffusedLight::scatter(const Ray &r_in,
-                            const glm::vec3 &hit_point,
-                            const glm::vec3 &hit_point_normal,
-                            Color &attenuation,
-                            Ray &scattered) const {
-    return false;
+glm::vec3 Lambertian::emit(const glm::vec3 &point) const {
+    return glm::vec3(0);
 }
 
-glm::vec3 DiffusedLight::emit(const glm::vec3 &point) const {
-    return texture_->get_color(point) * intensity_;
-}
 

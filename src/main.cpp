@@ -13,7 +13,7 @@
 
 constexpr int DEPTH = 100;
 constexpr int SPP = 2000;
-constexpr int MAX_THREADS = 20;
+constexpr int MAX_THREADS = 32;
 
 Utils utils;
 
@@ -105,6 +105,7 @@ public:
     void create_scene() {
         {
             cam = Camera(glm::vec3(208, 250, -500), glm::vec3(278, 250, 0), glm::vec3(0, 1, 0), 54);
+//            cam = Camera(glm::vec3(278, 554, 279.5), glm::vec3(278, 553, 279.5), glm::vec3(1, 0, 0), 90);
 //
             auto red = SolidLambertian(Color(.65, .05, .05));
             auto green = SolidLambertian(Color(.12, .45, .15));
@@ -124,9 +125,8 @@ public:
             hitlist.add(std::make_shared<XYRect>(0, 0, 555, 555, 555, white)); // front wall
             hitlist.add(std::make_shared<XZRect>(213, 227, 343, 332, 554, light)); // light
             hitlist.add(std::make_shared<Sphere>(glm::vec3(150, 280, 300), 80, purp));
-            hitlist.add(std::make_shared<Pyramid>(300, 120, 420, 280, 200, 160, blue_glass));
-            hitlist.add(std::make_shared<Box>(glm::vec3(200, 0, 100), glm::vec3(400, 100, 350), iron));
-
+            hitlist.add(std::make_shared<Pyramid>(270, 150, 390, 230, 200, 160, blue_glass));
+            hitlist.add(std::make_shared<Box>(glm::vec3(250, 0, 250), glm::vec3(480, 100, 480), iron));
         }
 
         {

@@ -48,6 +48,10 @@ public:
 
     };
 
+    glm::vec3 get_random(const glm::vec3 &point) const { return {1, 0, 0}; }
+
+    float get_probability(glm::vec3 dir, glm::vec3 point) const { return 0; }
+
 private:
     std::shared_ptr<Material<T>> material_;
     glm::vec3 center_;

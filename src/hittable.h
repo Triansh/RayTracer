@@ -15,7 +15,6 @@
 #include "material_types.h"
 #include "utils.h"
 
-
 struct HitRecord {
     glm::vec3 point;
     glm::vec3 normal;
@@ -29,9 +28,15 @@ struct HitRecord {
     }
 };
 
+
 class BaseHittable {
 public:
     virtual bool hit_by_ray(const Ray &r, HitRecord &hr, float max_time) const = 0;
+
+    virtual float probability(glm::vec3 dir, glm::vec3 point) const = 0;
+
+    virtual glm::vec3 random(glm::vec3 point) const = 0;
+
 };
 
 template<typename M, template<typename> class T>
@@ -39,6 +44,14 @@ class Hittable : public BaseHittable {
 public:
     bool hit_by_ray(const Ray &r, HitRecord &hr, float max_time) const override {
         return static_cast<const T<M> &>(*this).hit(r, hr, max_time);
+    }
+
+    float probability(glm::vec3 dir, glm::vec3 point) const override {
+        return static_cast<const T<M> &>(*this).get_probability(dir, point);
+    }
+
+    glm::vec3 random(glm::vec3 point) const override {
+        return static_cast<const T<M> &>(*this).get_random(point);
     }
 };
 
@@ -48,7 +61,7 @@ struct HitList {
     // 1 -> emitters (lights)
     std::vector<std::shared_ptr<BaseHittable>> hittables;
 
-    void add(const std::shared_ptr<BaseHittable>& h) { hittables.push_back(h); };
+    void add(const std::shared_ptr<BaseHittable> &h) { hittables.push_back(h); };
 
     bool hit(const Ray &r, HitRecord &hr) const;
 

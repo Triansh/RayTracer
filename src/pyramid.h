@@ -45,6 +45,11 @@ public:
         return true;
     }
 
+    glm::vec3 get_random(const glm::vec3 &point) const { return {1, 0, 0}; }
+
+    float get_probability(glm::vec3 dir, glm::vec3 point) const { return 0; }
+
+
 private:
     std::shared_ptr<Material<T>> material_;
     glm::vec3 v1_, v2_, v3_;
@@ -70,6 +75,10 @@ public:
         triangles.emplace_back(std::make_unique<Triangle<T>>(v4, v2, v5, m));
         triangles.emplace_back(std::make_unique<Triangle<T>>(v4, v3, v5, m));
     }
+
+    glm::vec3 get_random(const glm::vec3 &point) const { return {1, 0, 0}; }
+
+    float get_probability(glm::vec3 dir, glm::vec3 point) const { return 0; }
 
     bool hit(const Ray &r, HitRecord &hr, float max_time) const {
 

@@ -27,6 +27,10 @@ public:
 
     }
 
+    glm::vec3 get_random(const glm::vec3 &point) const { return {1, 0, 0}; }
+
+    float get_probability(glm::vec3 dir, glm::vec3 point) const { return 0; }
+
     bool hit(const Ray &r, HitRecord &hr, float max_time) const {
         bool hit_anything = false;
         auto closest_so_far = max_time;

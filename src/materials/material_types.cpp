@@ -2,10 +2,10 @@
 // Created by trios on 8/7/22.
 //
 
-#include <glm/gtx/norm.hpp>
+#include "glm/gtx/norm.hpp"
 
-#include "material_types.h"
-#include "utils.h"
+#include "materials/material_types.h"
+#include "utils/utils.h"
 
 
 bool Metal::scatter(const Ray &r_in,
@@ -38,7 +38,8 @@ bool DiffusedLight::scatter(const Ray &r_in,
 glm::vec3 DiffusedLight::emit(const glm::vec3 &hit_point,
                               const glm::vec3 &hit_point_normal,
                               bool is_front_face) const {
-    return is_front_face ? (texture_->get_color(hit_point) * intensity_) : glm::vec3(0);
+//    return is_front_face ? (texture_->get_color(hit_point) * intensity_) : glm::vec3(0);
+    return (texture_->get_color(hit_point) * intensity_);
 }
 
 bool Lambertian::scatter(const Ray &r_in,
@@ -72,8 +73,8 @@ bool Transparent::scatter(const Ray &r_in,
                           bool is_front_face,
                           Color &attenuation,
                           Ray &scattered) const {
-    auto ratio = is_front_face ? refractive_index : (1 / refractive_index);
-    auto cosine = std::min(glm::dot(-r_in.direction(), hit_point_normal), float(-1));
+    auto ratio = (!is_front_face) ? refractive_index : (1 / refractive_index);
+    auto cosine = std::min(glm::dot(-r_in.direction(), hit_point_normal), float(1));
     auto sine = std::sqrt(1 - cosine * cosine);
 
     auto refraction_possible = !((1 < sine * ratio) | schlik_approx(ratio, cosine));

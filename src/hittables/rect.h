@@ -5,13 +5,10 @@
 #ifndef RAYTRACER_RECT_H
 #define RAYTRACER_RECT_H
 
-#include <utility>
+#include "utils/utils.h"
 
-#include "hittable.h"
+#include "hittables/hittable.h"
 
-enum Axis {
-    X, Y, Z
-};
 
 template<class T>
 class AxisAlignedRect : public Hittable<T, AxisAlignedRect> {

@@ -7,18 +7,20 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
-#include <utility>
 
-#include "hittable.h"
+
+#include "hittables/hittable.h"
+#include "utils/utils.h"
 
 template<typename T>
 class Sphere : public Hittable<T, Sphere> {
 
 public:
-    Sphere(glm::vec3 center, float radius, std::shared_ptr<Material<T>> material)
+    Sphere(glm::vec3 center, float radius, std::shared_ptr<Material<T>> material, bool hollow = false)
             : material_(std::move(material)),
               center_(center),
-              radius_(radius) {
+              radius_(radius),
+              hollow_(hollow) {
     }
 
     bool hit(const Ray &r, HitRecord &hr, float max_time) const {
@@ -43,6 +45,10 @@ public:
         hr.point = r.at(root);
         auto normal = glm::normalize(hr.point - center_);
         hr.set_face_normal(r, normal);
+//        if (hollow_) {
+//            hr.normal *= -1;
+//            hr.front_face = !hr.front_face;
+//        }
         hr.material = material_;
         return true;
 
@@ -56,6 +62,7 @@ private:
     std::shared_ptr<Material<T>> material_;
     glm::vec3 center_;
     float radius_;
+    bool hollow_;
 
 };
 

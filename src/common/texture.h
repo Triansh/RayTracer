@@ -5,11 +5,10 @@
 #ifndef RAYTRACER_TEXTURE_H
 #define RAYTRACER_TEXTURE_H
 
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 #include <memory>
-#include <iomanip>
 
-#include "utils.h"
+#include "utils/utils.h"
 
 
 typedef glm::vec3 Color;

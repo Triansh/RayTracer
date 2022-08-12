@@ -7,7 +7,7 @@
 
 #include <vector>
 
-#include "rect.h"
+#include "hittables/rect.h"
 
 template<typename T>
 class Box : public Hittable<T, Box> {

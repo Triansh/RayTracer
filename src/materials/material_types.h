@@ -5,10 +5,10 @@
 #ifndef RAYTRACER_MATERIAL_TYPES_H
 #define RAYTRACER_MATERIAL_TYPES_H
 
-#include <glm/glm.hpp>
-#include <utility>
+#include "glm/glm.hpp"
+#include "utils/utils.h"
 
-#include "material.h"
+#include "materials/material.h"
 
 class Lambertian : public Material<Lambertian> {
 public:

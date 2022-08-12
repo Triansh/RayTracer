@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "rect.h"
+#include "hittables/rect.h"
 
 template<class T>
 class Triangle : public Hittable<T, Triangle> {

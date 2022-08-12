@@ -7,11 +7,11 @@
 
 #include <glm/glm.hpp>
 
-#include "ray.h"
+#include "common/ray.h"
 
 constexpr int IMAGE_HEIGHT = 512;
 //constexpr float ASPECT_RATIO =  16.0 / 9;
-constexpr float ASPECT_RATIO =  1;
+constexpr float ASPECT_RATIO = 1;
 constexpr int IMAGE_WIDTH = int(ASPECT_RATIO * IMAGE_HEIGHT);
 
 
@@ -24,6 +24,7 @@ public:
     float viewport_height{};
 
     Camera() = default;
+
     Camera(glm::vec3 pos, glm::vec3 look, glm::vec3 vup, float view)
             : pos_(pos), look_at(look), up(vup), fov(view) {
         auto theta = glm::radians(fov);

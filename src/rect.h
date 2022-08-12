@@ -19,8 +19,9 @@ class AxisAlignedRect : public Hittable<T, AxisAlignedRect> {
 public:
     AxisAlignedRect() : material_(nullptr) {}
 
-    AxisAlignedRect(float x1, float y1, float x2, float y2, float k, Axis ax, std::shared_ptr<Material<T>> m)
-            : material_(m), x1_(x1), x2_(x2), y1_(y1), y2_(y2), k_(k), axis(ax) {
+    AxisAlignedRect(float x1, float y1, float x2, float y2, float k, Axis ax, std::shared_ptr<Material<T>> m,
+                    bool flip = false)
+            : material_(m), x1_(x1), x2_(x2), y1_(y1), y2_(y2), k_(k), axis(ax), flip_(flip) {
 
         area_ = (x2 - x1) * (y2 - y1);
         const static std::uniform_real_distribution<float> random_x_distribution(x1, x2);
@@ -61,6 +62,7 @@ public:
         hr.point = hit_point;
         hr.time = t;
         hr.material = material_;
+        if (flip_) hr.front_face = !hr.front_face;
         return true;
     }
 
@@ -71,7 +73,7 @@ public:
 
         auto distance_squared = hr.time * hr.time;
         auto cosine = std::fabs(glm::dot(dir, hr.normal));
-        if(cosine < EPSILON) return 0;
+        if (cosine < EPSILON) return 0;
 
         return distance_squared / (cosine * area_);
     }
@@ -96,6 +98,7 @@ protected:
     float k_{};
     Axis axis;
     float area_;
+    bool flip_;
 private:
     std::function<float()> randomizer_x;
     std::function<float()> randomizer_y;
@@ -106,8 +109,8 @@ class XYRect : public AxisAlignedRect<T> {
 public:
     XYRect() = default;
 
-    XYRect(float x1, float y1, float x2, float y2, float k, std::shared_ptr<Material<T>> m)
-            : AxisAlignedRect<T>(x1, y1, x2, y2, k, Z, std::move(m)) {}
+    XYRect(float x1, float y1, float x2, float y2, float k, std::shared_ptr<Material<T>> m, bool flip = false)
+            : AxisAlignedRect<T>(x1, y1, x2, y2, k, Z, std::move(m), flip) {}
 };
 
 
@@ -116,8 +119,8 @@ class YZRect : public AxisAlignedRect<T> {
 public:
     YZRect() = default;
 
-    YZRect(float y1, float z1, float y2, float z2, float k, std::shared_ptr<Material<T>> m)
-            : AxisAlignedRect<T>(y1, z1, y2, z2, k, X, std::move(m)) {}
+    YZRect(float y1, float z1, float y2, float z2, float k, std::shared_ptr<Material<T>> m, bool flip = false)
+            : AxisAlignedRect<T>(y1, z1, y2, z2, k, X, std::move(m), flip) {}
 
 };
 
@@ -126,8 +129,8 @@ class XZRect : public AxisAlignedRect<T> {
 public:
     XZRect() = default;
 
-    XZRect(float x1, float z1, float x2, float z2, float k, std::shared_ptr<Material<T>> m)
-            : AxisAlignedRect<T>(x1, z1, x2, z2, k, Y, std::move(m)) {}
+    XZRect(float x1, float z1, float x2, float z2, float k, std::shared_ptr<Material<T>> m, bool flip = false)
+            : AxisAlignedRect<T>(x1, z1, x2, z2, k, Y, std::move(m), flip) {}
 
 };
 

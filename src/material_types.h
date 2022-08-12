@@ -12,35 +12,61 @@
 
 class Lambertian : public Material<Lambertian> {
 public:
-    Lambertian(std::shared_ptr<Texture> texture) : Material(std::move(texture)) {}
+    Lambertian(std::shared_ptr<Texture> texture) : Material(std::move(texture), false) {}
 
     bool scatter(const Ray &r_in,
                  const glm::vec3 &hit_point,
                  const glm::vec3 &hit_point_normal,
+                 bool is_front_face,
                  Color &attenuation,
                  Ray &scattered) const;
 
-    glm::vec3 emit(const glm::vec3 &point) const;
+    glm::vec3 emit(const glm::vec3 &hit_point,
+                   const glm::vec3 &hit_point_normal,
+                   bool is_front_face) const;
 
 };
 
 
 class Metal : public Material<Metal> {
 public:
-    Metal(std::shared_ptr<Texture> texture, float fuzz) : Material(std::move(texture)), fuzz_(fuzz) {}
-
-    static glm::vec3 reflect(glm::vec3 v, glm::vec3 n);
+    Metal(std::shared_ptr<Texture> texture, float fuzz) : Material(std::move(texture), true), fuzz_(fuzz) {}
 
     bool scatter(const Ray &r_in,
                  const glm::vec3 &hit_point,
                  const glm::vec3 &hit_point_normal,
+                 bool is_front_face,
                  Color &attenuation,
                  Ray &scattered) const;
 
-    glm::vec3 emit(const glm::vec3 &point) const;
+    glm::vec3 emit(const glm::vec3 &hit_point,
+                   const glm::vec3 &hit_point_normal,
+                   bool is_front_face) const;
 
 private:
     float fuzz_{};
+};
+
+class Transparent : public Material<Transparent> {
+public:
+    explicit Transparent(std::shared_ptr<Texture> texture) : Material(std::move(texture), true) {}
+
+    bool scatter(const Ray &r_in,
+                 const glm::vec3 &hit_point,
+                 const glm::vec3 &hit_point_normal,
+                 bool is_front_face,
+                 Color &attenuation,
+                 Ray &scattered) const;
+
+    glm::vec3 emit(const glm::vec3 &hit_point,
+                   const glm::vec3 &hit_point_normal,
+                   bool is_front_face) const;
+
+private:
+    bool schlik_approx(float ratio, float cosine) const;
+
+    float refractive_index = 1.5;
+
 };
 
 class DiffusedLight : public Material<DiffusedLight> {
@@ -51,10 +77,13 @@ public:
     bool scatter(const Ray &r_in,
                  const glm::vec3 &hit_point,
                  const glm::vec3 &hit_point_normal,
+                 bool is_front_face,
                  Color &attenuation,
                  Ray &scattered) const;
 
-    glm::vec3 emit(const glm::vec3 &point) const;
+    glm::vec3 emit(const glm::vec3 &hit_point,
+                   const glm::vec3 &hit_point_normal,
+                   bool is_front_face) const;
 
 private:
     float intensity_;

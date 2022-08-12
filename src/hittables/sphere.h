@@ -5,12 +5,8 @@
 #ifndef RAYTRACER_SPHERE_H
 #define RAYTRACER_SPHERE_H
 
-#include <glm/glm.hpp>
-#include <glm/gtx/norm.hpp>
 
-
-#include "hittables/hittable.h"
-#include "utils/utils.h"
+#include "hittable.h"
 
 template<typename T>
 class Sphere : public Hittable<T, Sphere> {

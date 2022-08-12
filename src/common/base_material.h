@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <functional>
+
 #include "glm/gtx/norm.hpp"
 
 #include "ray.h"

@@ -5,9 +5,7 @@
 #ifndef RAYTRACER_RECT_H
 #define RAYTRACER_RECT_H
 
-#include "utils/utils.h"
-
-#include "hittables/hittable.h"
+#include "hittable.h"
 
 
 template<class T>

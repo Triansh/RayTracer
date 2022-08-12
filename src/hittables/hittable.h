@@ -5,14 +5,11 @@
 #ifndef RAYTRACER_HITTABLE_H
 #define RAYTRACER_HITTABLE_H
 
-#include <iostream>
 #include <memory>
-#include <utility>
 #include <vector>
 
-#include "common/ray.h"
-#include "utils/utils.h"
 #include "common/base_hittable.h"
+#include "common/ray.h"
 
 
 template<typename M, template<typename> class T>

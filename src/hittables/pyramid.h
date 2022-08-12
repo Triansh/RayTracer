@@ -5,10 +5,8 @@
 #ifndef RAYTRACER_PYRAMID_H
 #define RAYTRACER_PYRAMID_H
 
-#include <utility>
-#include <vector>
 
-#include "hittables/rect.h"
+#include "rect.h"
 
 template<class T>
 class Triangle : public Hittable<T, Triangle> {

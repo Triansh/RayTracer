@@ -2,7 +2,7 @@
 // Created by trios on 8/6/22.
 //
 
-#include "hittables/hittable.h"
+#include "hittable.h"
 //
 //void HitList::add(const std::shared_ptr<Hittable> &h) {
 //    bool is_emitter = std::static_pointer_cast<Light>(h->material()) != nullptr;

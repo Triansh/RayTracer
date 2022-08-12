@@ -2,10 +2,7 @@
 // Created by trios on 8/7/22.
 //
 
-#include "glm/gtx/norm.hpp"
-
-#include "materials/material_types.h"
-#include "utils/utils.h"
+#include "material_types.h"
 
 
 bool Metal::scatter(const Ray &r_in,

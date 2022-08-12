@@ -13,7 +13,7 @@
 #include "utils/pdf.h"
 
 constexpr int DEPTH = 80;
-constexpr int SPP = 500;
+constexpr int SPP = 2000;
 constexpr int MAX_THREADS = 32;
 
 Utils utils;
@@ -144,8 +144,8 @@ public:
                                 (0, 0, 555, 555, 555, white)); // roof
             hitlist.add(std::make_shared<XYRect<Lambertian>>
                                 (0, 0, 555, 555, 555, white)); // front wall
-            hitlist.add(std::make_shared<Sphere<Transparent>>
-                                (glm::vec3(250, 80, 200), 80, transparent, false));
+            hitlist.add(std::make_shared<Sphere<Lambertian>>
+                                (glm::vec3(250, 80, 200), 80, blue_glass, false));
             hitlist.add(std::make_shared<Pyramid<Lambertian>>
                                 (20, 320, 220, 450, 0, 250, iron));
             hitlist.add(std::make_shared<Box<Lambertian>>

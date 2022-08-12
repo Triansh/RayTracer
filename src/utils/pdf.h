@@ -5,9 +5,8 @@
 #ifndef RAYTRACER_PDF_H
 #define RAYTRACER_PDF_H
 
-#include "hittables/hittable.h"
-#include <memory>
 
+#include "common/base_hittable.h"
 
 class HittablePdf {
 public:
@@ -27,7 +26,7 @@ public:
     virtual glm::vec3 random() const {
 //        auto toss = utils.random();
 //        if (toss < 0.5)
-            return ptr_->random(point_);
+        return ptr_->random(point_);
 //        auto random_cos = utils.random_cosine();
 //        return u * random_cos.x + v * random_cos.y + w * random_cos.z;
 

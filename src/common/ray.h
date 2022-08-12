@@ -6,8 +6,10 @@
 #define RAYTRACER_RAY_H
 
 
-#include <iostream>
-#include "glm/glm.hpp"
+#include <glm/glm.hpp>
+
+#include "utils/utils.h"
+
 
 class Ray {
 

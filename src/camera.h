@@ -5,7 +5,6 @@
 #ifndef RAYTRACER_CAMERA_H
 #define RAYTRACER_CAMERA_H
 
-#include <glm/glm.hpp>
 
 #include "common/ray.h"
 

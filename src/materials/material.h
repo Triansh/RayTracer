@@ -7,7 +7,6 @@
 
 
 #include "common/base_material.h"
-#include "utils/utils.h"
 
 template<class T>
 class Material : public BaseMaterial {

@@ -11,6 +11,7 @@
 #include <glm/gtc/constants.hpp>
 
 constexpr float EPSILON = 1e-6;
+extern float infinity;
 
 enum Axis {
     X, Y, Z

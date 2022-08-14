@@ -26,7 +26,7 @@ public:
             if (dir_i < EPSILON) std::swap(t1, t2);
             t1 = std::max(t1, float(0));
             t2 = std::min(t2, max_time);
-            if (t1 <= t2) return false;
+            if (t2 <= t1) return false;
         }
         return true;
     }

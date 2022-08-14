@@ -12,7 +12,7 @@ template<class T>
 class AxisAlignedRect : public Hittable<T, AxisAlignedRect> {
 
 public:
-    AxisAlignedRect() : material_(nullptr) {}
+//    AxisAlignedRect() : material_(nullptr) {}
 
     AxisAlignedRect(float x1, float y1, float x2, float y2, float k, Axis ax, std::shared_ptr<Material<T>> m,
                     bool flip = false)
@@ -73,7 +73,7 @@ public:
 
     float get_probability(glm::vec3 dir, glm::vec3 point) const {
         HitRecord hr;
-        if (!hit(Ray(point, dir), hr, float(LONG_LONG_MAX)))
+        if (!hit(Ray(point, dir), hr, infinity))
             return 0;
 
         auto distance_squared = hr.time * hr.time;

@@ -26,7 +26,6 @@ public:
         rects.emplace_back(std::make_unique<YZRect<T>>(y1, z1, y2, z2, x2, nullptr));
 
         this->bb_ = AABB(glm::min(lower, upper), glm::max(lower, upper));
-
     }
 
     glm::vec3 get_random(const glm::vec3 &point) const { return {1, 0, 0}; }

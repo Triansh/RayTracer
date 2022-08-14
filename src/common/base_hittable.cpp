@@ -2,7 +2,7 @@
 // Created by trios on 8/6/22.
 //
 
-#include "hittable.h"
+#include "base_hittable.h"
 //
 //void HitList::add(const std::shared_ptr<Hittable> &h) {
 //    bool is_emitter = std::static_pointer_cast<Light>(h->material()) != nullptr;
@@ -11,7 +11,7 @@
 
 bool HitList::hit(const Ray &r, HitRecord &hr) const {
     auto hit_anything = false;
-    auto closest_so_far = float(LONG_LONG_MAX);
+    auto closest_so_far = infinity;
 
     for (const auto &hittable: hittables) {
 //        for (const auto &object: hittable) {

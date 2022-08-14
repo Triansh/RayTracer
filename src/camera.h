@@ -8,7 +8,7 @@
 
 #include "common/ray.h"
 
-constexpr int IMAGE_HEIGHT = 512;
+constexpr int IMAGE_HEIGHT = 300;
 //constexpr float ASPECT_RATIO =  16.0 / 9;
 constexpr float ASPECT_RATIO = 1;
 constexpr int IMAGE_WIDTH = int(ASPECT_RATIO * IMAGE_HEIGHT);

@@ -37,7 +37,7 @@ public:
 
     static glm::vec3 refract(const glm::vec3 &incident, const glm::vec3 &normal, float ratio) {
         float cosine = std::min(glm::dot(-incident, normal), float(1.0));
-        auto perp = ratio * (incident + cosine * normal);
+        auto perp = ratio * (incident + (cosine * normal));
         auto parallel = -std::sqrt(std::abs(float(1.0) - glm::length2(perp))) * normal;
         return perp + parallel;
     }

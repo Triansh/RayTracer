@@ -52,8 +52,8 @@ bool Lambertian::scatter(const Ray &r_in,
         scatter_direction = hit_point_normal;
 
     scattered = Ray(hit_point, scatter_direction);
-    auto cosine = glm::dot(hit_point_normal, scattered.direction());
-    attenuation = texture_->get_color(hit_point) * (cosine < 0 ? 0 : (cosine / glm::pi<float>()));
+//    auto cosine = glm::dot(hit_point_normal, scattered.direction());
+    attenuation = texture_->get_color(hit_point);// * (cosine < 0 ? 0 : (cosine / glm::pi<float>()));
     return true;
 
 }
@@ -79,7 +79,7 @@ bool Transparent::scatter(const Ray &r_in,
                ? refract(r_in.direction(), hit_point_normal, ratio)
                : reflect(r_in.direction(), hit_point_normal);
     scattered = Ray(hit_point, dir);
-    attenuation = glm::vec3(1);
+    attenuation = glm::vec3(1,1,1);
     return true;
 }
 

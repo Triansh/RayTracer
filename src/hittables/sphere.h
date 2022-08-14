@@ -40,7 +40,7 @@ public:
 
         hr.time = root;
         hr.point = r.at(root);
-        auto normal = glm::normalize(hr.point - center_);
+        auto normal = (hr.point - center_) / radius_;
         hr.set_face_normal(r, normal);
 //        if (hollow_) {
 //            hr.normal *= -1;

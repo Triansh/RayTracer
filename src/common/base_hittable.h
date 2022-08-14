@@ -6,6 +6,7 @@
 #define RAYTRACER_BASE_HITTABLE_H
 
 #include "base_material.h"
+#include "aabb.h"
 
 struct HitRecord {
     glm::vec3 point;
@@ -28,6 +29,20 @@ public:
     virtual float probability(glm::vec3 dir, glm::vec3 point) const = 0;
 
     virtual glm::vec3 random(glm::vec3 point) const = 0;
+
+    AABB bounding_box() const { return bb_; }
+
+protected:
+    AABB bb_{};
+};
+
+
+struct HitList {
+    std::vector<std::shared_ptr<BaseHittable>> hittables;
+
+    void add(const std::shared_ptr<BaseHittable> &h) { hittables.push_back(h); };
+
+    bool hit(const Ray &r, HitRecord &hr) const;
 };
 
 #endif //RAYTRACER_BASE_HITTABLE_H

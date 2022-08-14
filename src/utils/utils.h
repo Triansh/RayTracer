@@ -16,6 +16,14 @@ enum Axis {
     X, Y, Z
 };
 
+static int get_axis_num(Axis axis) {
+    int ax = -1;
+    if (axis == X) ax = 0;
+    else if (axis == Y) ax = 1;
+    else if (axis == Z) ax = 2;
+    return ax;
+}
+
 class Utils {
 public:
 
@@ -31,7 +39,11 @@ public:
 
     float random() { return uniform_random(); };
 
-//     glm::vec3 random_vec3(float mini = 0.0, float maxi = 1.0) {
+    static float random(float min, float max) {
+        return min + (float(max - min) * rand() / RAND_MAX);
+    }
+
+//    glm::vec3 random_vec3(float mini = 0.0, float maxi = 1.0) {
 //        return {random(mini, maxi), random(mini, maxi), random(mini, maxi)};
 //    }
 
@@ -45,7 +57,6 @@ public:
                 glm::sin(angle) * root_v2,
                 std::sqrt(1 - v2)
         };
-
     }
 
     glm::vec3 random_in_unit_sphere() {

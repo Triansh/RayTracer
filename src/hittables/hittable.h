@@ -29,18 +29,6 @@ public:
 };
 
 
-struct HitList {
-    // 0 -> non emitters (non-lights)
-    // 1 -> emitters (lights)
-    std::vector<std::shared_ptr<BaseHittable>> hittables;
-
-    void add(const std::shared_ptr<BaseHittable> &h) { hittables.push_back(h); };
-
-    bool hit(const Ray &r, HitRecord &hr) const;
-
-};
-
-
 
 //class Emitter : public Hittable, Light {
 //    Emitter(std::shared_ptr<Material> material, float intensity): Hittable(material), Light(material)

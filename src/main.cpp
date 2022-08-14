@@ -12,7 +12,7 @@
 #include "hittables/box.h"
 #include "utils/pdf.h"
 
-constexpr int DEPTH = 80;
+constexpr int DEPTH = 200;
 constexpr int SPP = 2000;
 constexpr int MAX_THREADS = 32;
 
@@ -117,9 +117,9 @@ public:
             auto red = SolidLambertian(Color(.65, .05, .05));
             auto green = SolidLambertian(Color(.12, .45, .15));
 //            auto purp = SolidLambertian(Color(0.7, 0.3, 0.75));
-//            auto iron = std::make_shared<Metal>(std::make_shared<Solid>(Color(0.6314, 0.6157, 0.5804)), 0);
+            auto iron = std::make_shared<Metal>(std::make_shared<Solid>(Color(0.6314, 0.6157, 0.5804)), 0);
 //            auto iron = std::make_shared<Lambertian>(std::make_shared<Solid>(Color(0.6314, 0.6157, 0.5804)));
-            auto iron = std::make_shared<Lambertian>(std::make_shared<Solid>(Color(0.8, 0.75, 0.3)));
+//            auto iron = std::make_shared<Lambertian>(std::make_shared<Solid>(Color(0.8, 0.75, 0.3)));
 //            auto iron = std::make_shared<Lambertian>(std::make_shared<Solid>(Color(0.8, 0.85, 0.88)));
             auto white = SolidLambertian(Color(.95, .9, .85));
             auto purp = SolidLambertian(Color(0.7, 0.3, 0.75));
@@ -139,14 +139,14 @@ public:
             hitlist.add(std::make_shared<YZRect<Lambertian>>
                                 (0, 0, 555, 555, 555, green)); // right wall
             hitlist.add(std::make_shared<XZRect<Lambertian>>
-                                (0, 0, 555, 555, 0, white)); // ground
+                                (0, 0, 555, 555, 0, checker)); // ground
             hitlist.add(std::make_shared<XZRect<Lambertian>>
                                 (0, 0, 555, 555, 555, white)); // roof
             hitlist.add(std::make_shared<XYRect<Lambertian>>
                                 (0, 0, 555, 555, 555, white)); // front wall
-            hitlist.add(std::make_shared<Sphere<Lambertian>>
-                                (glm::vec3(250, 80, 200), 80, blue_glass, false));
-            hitlist.add(std::make_shared<Pyramid<Lambertian>>
+            hitlist.add(std::make_shared<Sphere<Transparent>>
+                                (glm::vec3(350, 80, 200), 80, transparent, false));
+            hitlist.add(std::make_shared<Pyramid<Metal>>
                                 (20, 320, 220, 450, 0, 250, iron));
             hitlist.add(std::make_shared<Box<Lambertian>>
                                 (glm::vec3(250, 0, 300), glm::vec3(480, 200, 510), purp));

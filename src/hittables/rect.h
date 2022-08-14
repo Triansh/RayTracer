@@ -16,7 +16,7 @@ public:
 
     AxisAlignedRect(float x1, float y1, float x2, float y2, float k, Axis ax, std::shared_ptr<Material<T>> m,
                     bool flip = false)
-            : material_(m), x1_(x1), x2_(x2), y1_(y1), y2_(y2), k_(k), axis(ax), flip_(flip) {
+            : material_(m), x1_(x1), x2_(x2), y1_(y1), y2_(y2), k_(k), axis_(ax), flip_(flip) {
 
         area_ = (x2 - x1) * (y2 - y1);
         const static std::uniform_real_distribution<float> random_x_distribution(x1, x2);
@@ -26,29 +26,39 @@ public:
         const static std::uniform_real_distribution<float> random_y_distribution(y1, y2);
         const static std::mt19937 random_y_generator;
         randomizer_y = std::bind(random_y_distribution, random_y_generator);
+
+        glm::vec3 lower, upper;
+        if (axis_ == X) {
+            lower = glm::vec3(-EPSILON, std::min(x1, x2), std::min(y1, y2));
+            upper = glm::vec3(+EPSILON, std::max(x1, x2), std::max(y1, y2));
+        } else if (axis_ == Y) {
+            lower = glm::vec3(std::min(x1, x2), -EPSILON, std::min(y1, y2));
+            upper = glm::vec3(std::max(x1, x2), +EPSILON, std::max(y1, y2));
+        } else if (axis_ == Z) {
+            lower = glm::vec3(std::min(x1, x2), std::min(y1, y2), -EPSILON);
+            upper = glm::vec3(std::max(x1, x2), std::max(y1, y2), +EPSILON);
+        }
+        this->bb_ = AABB(lower, upper);
     }
 
     bool hit(const Ray &r, HitRecord &hr, float max_time) const {
 
-        int ax;
-        if (axis == X) ax = 0;
-        else if (axis == Y) ax = 1;
-        else if (axis == Z) ax = 2;
+        int ax = get_axis_num(axis_);
 
         float t = (k_ - r.origin()[ax]) / r.direction()[ax];
         if (t > max_time or t < EPSILON) return false;
 
         auto hit_point = r.origin() + t * r.direction();
 
-        if (axis == X) {
+        if (axis_ == X) {
             if (!(x1_ <= hit_point.y and hit_point.y <= x2_ and y1_ <= hit_point.z and hit_point.z <= y2_))
                 return false;
             hr.set_face_normal(r, glm::vec3(1, 0, 0));
-        } else if (axis == Y) {
+        } else if (axis_ == Y) {
             if (!(x1_ <= hit_point.x and hit_point.x <= x2_ and y1_ <= hit_point.z and hit_point.z <= y2_))
                 return false;
             hr.set_face_normal(r, glm::vec3(0, 1, 0));
-        } else if (axis == Z) {
+        } else if (axis_ == Z) {
             if (!(x1_ <= hit_point.x and hit_point.x <= x2_ and y1_ <= hit_point.y and hit_point.y <= y2_))
                 return false;
             hr.set_face_normal(r, glm::vec3(0, 0, 1));
@@ -76,11 +86,11 @@ public:
     glm::vec3 get_random(const glm::vec3 &point) const {
         auto x = randomizer_x(), y = randomizer_y();
         glm::vec3 random_point;
-        if (axis == X) {
+        if (axis_ == X) {
             random_point = {k_, x, y};
-        } else if (axis == Y) {
+        } else if (axis_ == Y) {
             random_point = {x, k_, y};
-        } else if (axis == Z) {
+        } else if (axis_ == Z) {
             random_point = {x, y, k_};
         }
         return random_point - point;
@@ -91,7 +101,7 @@ protected:
     float x1_{}, y1_{};
     float x2_{}, y2_{};
     float k_{};
-    Axis axis;
+    Axis axis_;
     float area_;
     bool flip_;
 private:

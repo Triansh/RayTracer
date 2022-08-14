@@ -10,56 +10,28 @@
 #include "triangle.h"
 
 template<class T>
-class Pyramid : public Hittable<T, Pyramid> {
+class Pyramid : public HitList {
 public:
     Pyramid(float x1, float z1, float x2, float z2, float k, float height, const std::shared_ptr<Material<T>> &m)
-            : height_(height), material_(m), plane_(std::make_unique<XZRect<T>>(x1, z1, x2, z2, k, m)) {
+            : material_(m) {
 
         auto v1 = glm::vec3(x1, k, z1);
         auto v2 = glm::vec3(x1, k, z2);
         auto v3 = glm::vec3(x2, k, z1);
         auto v4 = glm::vec3(x2, k, z2);
         auto normal = glm::normalize(glm::cross(v2 - v1, v3 - v1));
-        auto v5 = (float(0.25) * (v1 + v2 + v3 + v4)) + (normal * height_);
+        auto v5 = (float(0.25) * (v1 + v2 + v3 + v4)) + (normal * height);
 
-        triangles.emplace_back(std::make_unique<Triangle<T>>(v1, v2, v5, m));
-        triangles.emplace_back(std::make_unique<Triangle<T>>(v1, v3, v5, m));
-        triangles.emplace_back(std::make_unique<Triangle<T>>(v4, v2, v5, m));
-        triangles.emplace_back(std::make_unique<Triangle<T>>(v4, v3, v5, m));
+        add(std::make_shared<Triangle<T>>(v1, v2, v5, m));
+        add(std::make_shared<Triangle<T>>(v1, v3, v5, m));
+        add(std::make_shared<Triangle<T>>(v4, v2, v5, m));
+        add(std::make_shared<Triangle<T>>(v4, v3, v5, m));
+        add(std::make_shared<XZRect<T>>(x1, z1, x2, z2, k, m));
 
-        auto lower = plane_->bounding_box().lower();
-        auto upper = plane_->bounding_box().upper();
-        for (const auto &t: triangles) {
-            lower = glm::min(lower, t->bounding_box().lower());
-            upper = glm::min(upper, t->bounding_box().upper());
-        }
-        this->bb_ = AABB(lower, upper);
-    }
-
-    glm::vec3 get_random(const glm::vec3 &point) const { return {1, 0, 0}; }
-
-    float get_probability(glm::vec3 dir, glm::vec3 point) const { return 0; }
-
-    bool hit(const Ray &r, HitRecord &hr, float max_time) const {
-
-        bool hit_anything = false;
-        for (const auto &t: triangles) {
-            if (t->hit(r, hr, max_time)) {
-                hit_anything = true;
-                max_time = hr.time;
-            }
-        }
-
-        if (plane_->hit(r, hr, max_time)) {
-            hit_anything = true;
-        }
-        return hit_anything;
+        set_bounding_box();
     }
 
 private:
-    std::unique_ptr<XZRect<T>> plane_;
-    float height_;
-    std::vector<std::unique_ptr<Triangle<T>>> triangles;
     std::shared_ptr<Material<T>> material_;
 
 };

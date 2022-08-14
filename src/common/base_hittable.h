@@ -49,7 +49,9 @@ public:
 
     void add(const std::shared_ptr<BaseHittable> &h) { hittables.push_back(h); };
 
-//    bool hit(const Ray &r, HitRecord &hr, float max_time = infinity) const;
+    void set_bounding_box();
+
+    void set_bounding_box(const std::vector<std::shared_ptr<BaseHittable>> &objs);
 };
 
 #endif //RAYTRACER_BASE_HITTABLE_H

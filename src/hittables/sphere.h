@@ -17,7 +17,7 @@ public:
               center_(center),
               radius_(radius),
               hollow_(hollow) {
-        this->bb_ = AABB(center_ - radius_, center_ + radius_);
+        this->bb_ = AABB(center_ - radius_ - EPSILON, center_ + radius_ + EPSILON);
     }
 
     bool hit(const Ray &r, HitRecord &hr, float max_time) const {

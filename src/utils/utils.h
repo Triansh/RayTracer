@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
-constexpr float EPSILON = 1e-6;
+constexpr float EPSILON = 1e-3;
 extern float infinity;
 
 enum Axis {

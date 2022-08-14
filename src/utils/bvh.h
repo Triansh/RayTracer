@@ -11,27 +11,19 @@
 
 #include "common/base_hittable.h"
 
-class BVHNode {
+class BVHNode : public HitList {
 public:
     BVHNode(const std::vector<std::shared_ptr<BaseHittable>> &objs, int start_index, int end_index);
 
-    bool hit(const Ray &r, HitRecord &hr, float max_time) const;
+    bool hit_by_ray(const Ray &r, HitRecord &hr, float max_time) const override;
 
     static bool
     compare_boxes(const std::shared_ptr<BaseHittable> &a, const std::shared_ptr<BaseHittable> &b, int axis);
 
-    AABB bounding_box() { return bb_; }
-
 
 private:
-    std::vector<std::shared_ptr<BaseHittable>> objs_;
-    std::shared_ptr<BVHNode> left_;
-    std::shared_ptr<BVHNode> right_;
-    bool is_leaf;
-    int axis_;
-    AABB bb_{};
-    int start_index_;
-    int end_index_;
+    std::shared_ptr<BaseHittable> left_;
+    std::shared_ptr<BaseHittable> right_;
 
 };
 

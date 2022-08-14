@@ -16,7 +16,6 @@
 
 constexpr int DEPTH = 50;
 constexpr int SPP = 100;
-//constexpr int MAX_THREADS = 40;
 
 
 Utils utils;
@@ -151,8 +150,7 @@ public:
                                     (glm::vec3(300, 80, 70), 80, transparent, false));
                 hitlist.add(std::make_shared<Pyramid<Metal>>
                                     (370, 320, 520, 450, 0, 250, iron));
-                hitlist.add(std::make_shared<Box<Lambertian>>
-                                    (glm::vec3(50, 0, 300), glm::vec3(280, 200, 510), purp));
+                hitlist.add(std::make_shared<Box<Lambertian>>(glm::vec3(50, 0, 300), glm::vec3(280, 200, 510), purp));
 
                 light_ = std::make_shared<XZRect<DiffusedLight>>
                         (213, 227, 343, 332, 554, light, false);
@@ -306,6 +304,9 @@ private:
 };
 
 signed main() {
+
+    std::cerr << infinity << "\n";
+    std::cerr << -infinity << "\n";
 
     auto tracer = RayTracer();
     tracer.render();

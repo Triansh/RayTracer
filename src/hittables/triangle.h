@@ -13,8 +13,8 @@ public:
     Triangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, std::shared_ptr<Material<T>> m)
             : v1_(v1), v2_(v2), v3_(v3), material_(m) {
         normal = glm::normalize(glm::cross(v3_ - v1_, v3_ - v2_));
-        auto low = glm::min(v1, glm::min(v2, v3));
-        auto high = glm::max(v1, glm::max(v2, v3));
+        auto low = glm::min(v1, glm::min(v2, v3)) - EPSILON;
+        auto high = glm::max(v1, glm::max(v2, v3)) + EPSILON;
         this->bb_ = AABB(low, high);
     }
 

@@ -53,15 +53,15 @@ public:
         if (axis_ == X) {
             if (!(x1_ <= hit_point.y and hit_point.y <= x2_ and y1_ <= hit_point.z and hit_point.z <= y2_))
                 return false;
-            hr.set_face_normal(r, glm::vec3(1, 0, 0));
+            hr.set_normal(r, glm::vec3(1, 0, 0));
         } else if (axis_ == Y) {
             if (!(x1_ <= hit_point.x and hit_point.x <= x2_ and y1_ <= hit_point.z and hit_point.z <= y2_))
                 return false;
-            hr.set_face_normal(r, glm::vec3(0, 1, 0));
+            hr.set_normal(r, glm::vec3(0, 1, 0));
         } else if (axis_ == Z) {
             if (!(x1_ <= hit_point.x and hit_point.x <= x2_ and y1_ <= hit_point.y and hit_point.y <= y2_))
                 return false;
-            hr.set_face_normal(r, glm::vec3(0, 0, 1));
+            hr.set_normal(r, glm::vec3(0, 0, 1));
         }
 
         hr.point = hit_point;

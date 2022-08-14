@@ -47,7 +47,7 @@ private:
 
 class Transparent : public Material<Transparent> {
 public:
-    explicit Transparent(std::shared_ptr<Texture> texture) : Material(std::move(texture), true) {}
+    explicit Transparent() : Material(nullptr, true) {}
 
     bool scatter(const Ray &r_in,
                  const glm::vec3 &hit_point,

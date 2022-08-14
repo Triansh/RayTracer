@@ -22,26 +22,26 @@ public:
 
     bool hit(const Ray &r, HitRecord &hr, float max_time) const {
 
-        auto oc = r.origin() - center_;
+        auto dist_center = r.origin() - center_;
         auto a = glm::length2(r.direction());
-        auto b_half = glm::dot(oc, r.direction());
-        auto c = glm::length2(oc) - (radius_ * radius_);
+        auto b_half = glm::dot(dist_center, r.direction());
+        auto c = glm::length2(dist_center) - (radius_ * radius_);
 
         auto D = (b_half * b_half) - (a * c);
         if (D < 0) return false;
 
-        auto sqrtD = sqrt(D);
-        auto root = float(-b_half - sqrtD) / a;
-        if (root < EPSILON || root > max_time) {
-            root = float(-b_half + sqrtD) / a;
-            if (root < EPSILON || root > max_time)
+        auto sq_root_D = sqrt(D);
+        auto time_val = float(-b_half - sq_root_D) / a;
+        if (time_val < EPSILON or time_val > max_time) {
+            time_val = float(-b_half + sq_root_D) / a;
+            if (time_val < EPSILON or time_val > max_time)
                 return false;
         }
 
-        hr.time = root;
-        hr.point = r.at(root);
+        hr.time = time_val;
+        hr.point = r.at(time_val);
         auto normal = (hr.point - center_) / radius_;
-        hr.set_face_normal(r, normal);
+        hr.set_normal(r, normal);
 //        if (hollow_) {
 //            hr.normal *= -1;
 //            hr.front_face = !hr.front_face;

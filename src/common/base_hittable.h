@@ -15,7 +15,7 @@ struct HitRecord {
     std::shared_ptr<BaseMaterial> material;
     bool front_face;
 
-    inline void set_face_normal(const Ray &r, const glm::vec3 &outward_normal) {
+    inline void set_normal(const Ray &r, const glm::vec3 &outward_normal) {
         front_face = dot(r.direction(), outward_normal) < 0;
         normal = front_face ? outward_normal : -outward_normal;
     }
@@ -37,12 +37,19 @@ protected:
 };
 
 
-struct HitList {
+class HitList : public BaseHittable {
+public:
     std::vector<std::shared_ptr<BaseHittable>> hittables;
+
+    bool hit_by_ray(const Ray &r, HitRecord &hr, float max_time) const override;
+
+    float probability(glm::vec3 dir, glm::vec3 point) const override { return 0; }
+
+    glm::vec3 random(glm::vec3 point) const override { return glm::vec3(0); }
 
     void add(const std::shared_ptr<BaseHittable> &h) { hittables.push_back(h); };
 
-    bool hit(const Ray &r, HitRecord &hr) const;
+//    bool hit(const Ray &r, HitRecord &hr, float max_time = infinity) const;
 };
 
 #endif //RAYTRACER_BASE_HITTABLE_H

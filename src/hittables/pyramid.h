@@ -43,15 +43,14 @@ public:
     bool hit(const Ray &r, HitRecord &hr, float max_time) const {
 
         bool hit_anything = false;
-        auto closest_so_far = max_time;
         for (const auto &t: triangles) {
-            if (t->hit(r, hr, closest_so_far)) {
+            if (t->hit(r, hr, max_time)) {
                 hit_anything = true;
-                closest_so_far = hr.time;
+                max_time = hr.time;
             }
         }
 
-        if (plane_->hit(r, hr, closest_so_far)) {
+        if (plane_->hit(r, hr, max_time)) {
             hit_anything = true;
         }
         return hit_anything;

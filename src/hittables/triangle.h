@@ -29,11 +29,11 @@ public:
 
         auto t_vec = r.origin() - v1_;
         auto u = glm::dot(t_vec, p_vec) * inv_det;
-        if (u < EPSILON || u > 1 + EPSILON) return false;
+        if (u < EPSILON or u > 1 + EPSILON) return false;
 
         auto q_vec = glm::cross(t_vec, v2_v1);
         auto v = glm::dot(r.direction(), q_vec) * inv_det;
-        if (v < EPSILON || u + v > 1 + EPSILON) return false;
+        if (v < EPSILON or u + v > 1 + EPSILON) return false;
 
         auto time = glm::dot(v3_v1, q_vec) * inv_det;
         if (time < EPSILON or time > max_time) return false;
@@ -41,7 +41,7 @@ public:
         hr.time = time;
         hr.point = r.at(time);
         hr.material = material_;
-        hr.set_face_normal(r, normal);
+        hr.set_normal(r, normal);
         return true;
     }
 

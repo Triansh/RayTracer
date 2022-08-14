@@ -9,19 +9,13 @@
 //    hittables[is_emitter].push_back(h);
 //}
 
-bool HitList::hit(const Ray &r, HitRecord &hr) const {
+bool HitList::hit_by_ray(const Ray &r, HitRecord &hr, float max_time) const {
     auto hit_anything = false;
-    auto closest_so_far = infinity;
-
     for (const auto &hittable: hittables) {
-//        for (const auto &object: hittable) {
-//        HitRecord temp_rec{};
-        if (hittable->hit_by_ray(r, hr, closest_so_far)) {
+        if (hittable->hit_by_ray(r, hr, max_time)) {
             hit_anything = true;
-            closest_so_far = hr.time;
-//            hr = hr;
+            max_time = hr.time;
         }
     }
-//    }
     return hit_anything;
 }

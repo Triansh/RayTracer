@@ -41,12 +41,12 @@ public:
     float random() { return uniform_random(); };
 
     static float random(float min, float max) {
-        return min + (float(max - min) * rand() / RAND_MAX);
+        return min + (float(max - min) * rand() / (RAND_MAX + 1.0));
     }
 
-//    glm::vec3 random_vec3(float mini = 0.0, float maxi = 1.0) {
-//        return {random(mini, maxi), random(mini, maxi), random(mini, maxi)};
-//    }
+    static glm::vec3 random_vec3(float mini = 0.0, float maxi = 1.0) {
+        return {random(mini, maxi), random(mini, maxi), random(mini, maxi)};
+    }
 
     glm::vec3 random_cosine() {
         auto v1 = random();

@@ -24,7 +24,7 @@ public:
             auto t1 = (minimum_[i] - pos_i) / dir_i;
             auto t2 = (maximum_[i] - pos_i) / dir_i;
             if (dir_i < EPSILON) std::swap(t1, t2);
-            t1 = std::max(t1, float(0));
+            t1 = std::max(t1, float(EPSILON));
             t2 = std::min(t2, max_time);
             if (t2 <= t1) return false;
         }

@@ -33,7 +33,7 @@ private:
 
 class CheckerBoard : public Texture {
 public:
-    CheckerBoard(std::shared_ptr<Texture> m1, std::shared_ptr<Texture> m2, float magnitude)
+    CheckerBoard(std::shared_ptr<Texture> m1, std::shared_ptr<Texture> m2, float magnitude=10)
             : m1_(std::move(m1)), m2_(std::move(m2)), magnitude_(magnitude) {}
 
     Color get_color(const glm::vec3 &hit_point) const override {

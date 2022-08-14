@@ -5,7 +5,7 @@
 #ifndef RAYTRACER_CAMERA_H
 #define RAYTRACER_CAMERA_H
 
-
+#include <iostream>
 #include "common/ray.h"
 
 constexpr int IMAGE_HEIGHT = 400;
@@ -27,8 +27,10 @@ public:
     Camera(glm::vec3 pos, glm::vec3 look, glm::vec3 vup, float view)
             : pos_(pos), look_at(look), up(vup), fov(view) {
         auto theta = glm::radians(fov);
-        viewport_height = int(2 * glm::tan(theta / 2));
-        viewport_width = int(ASPECT_RATIO * viewport_height);
+        viewport_height = (2 * glm::tan(theta / 2));
+        std::cerr << theta << " " << viewport_height << "\n";
+
+        viewport_width = (ASPECT_RATIO * viewport_height);
 
         auto w = glm::normalize(pos_ - look_at);
         auto u = glm::normalize(glm::cross(up, w));

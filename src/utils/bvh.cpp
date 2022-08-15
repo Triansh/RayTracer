@@ -24,8 +24,7 @@ BVHNode::BVHNode(const std::vector<std::shared_ptr<BaseHittable>> &objs, int sta
     int axis = std::round(Utils::random(0, 2) - EPSILON);
     hittables = objs;
     if (end_index - start_index <= 1) {
-        left_ = right_ = objs[start_index];
-        std::cerr << left_.use_count() << " at! " << left_ << "\n";
+        left_ = right_ = hittables[start_index];
     } else {
         std::sort(hittables.begin() + start_index, hittables.begin() + end_index,
                   [axis](const std::shared_ptr<BaseHittable> &a, const std::shared_ptr<BaseHittable> &b) {
@@ -33,16 +32,13 @@ BVHNode::BVHNode(const std::vector<std::shared_ptr<BaseHittable>> &objs, int sta
                   });
 
         if (end_index - start_index <= 2) {
-            left_ = objs[start_index];
-            right_ = objs[start_index + 1];
-            set_bounding_box();
-            std::cerr << left_.use_count() << " at@ " << left_ << "\n";
-            std::cerr << right_.use_count() << " at# " << right_ << "\n";
+            left_ = hittables[start_index];
+            right_ = hittables[start_index + 1];
         } else {
             int mid = start_index + (end_index - start_index) / 2;
-            left_ = std::make_shared<BVHNode>(objs, start_index, mid);
-            right_ = std::make_shared<BVHNode>(objs, mid, end_index);
+            left_ = std::make_shared<BVHNode>(hittables, start_index, mid);
+            right_ = std::make_shared<BVHNode>(hittables, mid, end_index);
         }
     }
-    set_bounding_box({objs.begin() + start_index, objs.begin() + end_index});
+    set_bounding_box({hittables.begin() + start_index, hittables.begin() + end_index});
 }

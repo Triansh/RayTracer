@@ -61,7 +61,7 @@ public:
                    bool is_front_face) const;
 
 private:
-    bool schlik_approx(float ratio, float cosine) const;
+    static bool schlik_approx(float ratio, float cosine) ;
 
     float refractive_index = 1.5;
 

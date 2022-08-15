@@ -47,7 +47,7 @@ public:
 
     glm::vec3 random(glm::vec3 point) const override { return glm::vec3(0); }
 
-    void add(const std::shared_ptr<BaseHittable> &h) { hittables.push_back(h); };
+    void add(const std::shared_ptr<BaseHittable> &h);
 
     void set_bounding_box();
 

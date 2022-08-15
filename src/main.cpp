@@ -14,8 +14,8 @@
 #include "utils/pdf.h"
 #include "utils/bvh.h"
 
-constexpr int DEPTH = 50;
-constexpr int SPP = 100;
+constexpr int DEPTH = 100;
+constexpr int SPP = 1500;
 
 
 Utils utils;
@@ -38,8 +38,8 @@ public:
     void write() {
 
         for (int i = IMAGE_HEIGHT - 1; i >= 0; i--) {
-            for (int j = 0; j < IMAGE_WIDTH; j++) {
-//                for (int j = IMAGE_WIDTH - 1; j >= 0; j--) {
+//            for (int j = 0; j < IMAGE_WIDTH; j++) {
+            for (int j = IMAGE_WIDTH - 1; j >= 0; j--) {
                 auto c = image[j][i];
 
                 if (c.x != c.x) c.x = 0;
@@ -63,6 +63,7 @@ public:
 
         HitRecord hr{};
         if (hitlist.hit_by_ray(r, hr, infinity)) {
+//            if (root_->hit_by_ray(r, hr, infinity)) {
             Ray scattered{};
             Color attenuation{};
             auto emit = hr.material->emittedValue(hr.point, hr.normal, hr.front_face);
@@ -70,7 +71,7 @@ public:
 
                 if (hr.material->is_specular()) return attenuation * get_ray_color(scattered, depth - 1);
 //
-                HittablePdf pdf(light_, hr.point, hr.normal);
+                InverseSquareLightPdf pdf(light_, hr.point, hr.normal);
                 scattered = Ray(hr.point, pdf.random());
                 float prob = pdf.probability(scattered.direction());
                 return emit +
@@ -119,7 +120,7 @@ public:
 
         switch (1) {
             case 1: {
-                cam = Camera(glm::vec3(278, 278, -550), glm::vec3(278, 278, 0), glm::vec3(0, 1, 0), 54);
+                cam = Camera(glm::vec3(278, 278, -700), glm::vec3(278, 278, 0), glm::vec3(0, 1, 0), 45);
 //
                 auto red = SolidLambertian(Color(.65, .05, .05));
                 auto green = SolidLambertian(Color(.12, .45, .15));
@@ -147,7 +148,7 @@ public:
                 hitlist.add(std::make_shared<XYRect<Lambertian>>
                                     (0, 0, 555, 555, 555, white)); // front wall
                 hitlist.add(std::make_shared<Sphere<Transparent>>
-                                    (glm::vec3(300, 80, 70), 80, transparent, false));
+                                    (glm::vec3(300, 80, 70), 80, transparent));
                 hitlist.add(std::make_shared<Pyramid<Metal>>
                                     (370, 320, 520, 450, 0, 250, iron));
                 hitlist.add(std::make_shared<Box<Lambertian>>(glm::vec3(50, 0, 300), glm::vec3(280, 200, 510), purp));
@@ -271,7 +272,7 @@ public:
                 }
 
                 auto material1 = std::make_shared<Transparent>();
-                hitlist.add(std::make_shared<Sphere<Transparent>>(glm::vec3(0, 1, 0), 1.0, material1, false));
+                hitlist.add(std::make_shared<Sphere<Transparent>>(glm::vec3(0, 1, 0), 1.0, material1));
 
                 auto material2 = SolidLambertian(Color(0.4, 0.2, 0.1));
                 hitlist.add(std::make_shared<Sphere<Lambertian>>(glm::vec3(-4, 1, 0), 1.0, material2));
@@ -289,6 +290,7 @@ public:
 //                            )
 //                );
         }
+
         root_ = std::make_shared<BVHNode>(hitlist.hittables, 0, hitlist.hittables.size());
 
     }

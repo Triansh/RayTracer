@@ -12,11 +12,10 @@ template<typename T>
 class Sphere : public Hittable<T, Sphere> {
 
 public:
-    Sphere(glm::vec3 center, float radius, std::shared_ptr<Material<T>> material, bool hollow = false)
+    Sphere(glm::vec3 center, float radius, std::shared_ptr<Material<T>> material)
             : material_(std::move(material)),
               center_(center),
-              radius_(radius),
-              hollow_(hollow) {
+              radius_(radius) {
         this->bb_ = AABB(center_ - radius_ - EPSILON, center_ + radius_ + EPSILON);
     }
 
@@ -42,10 +41,6 @@ public:
         hr.point = r.at(time_val);
         auto normal = (hr.point - center_) / radius_;
         hr.set_normal(r, normal);
-//        if (hollow_) {
-//            hr.normal *= -1;
-//            hr.front_face = !hr.front_face;
-//        }
         hr.material = material_;
         return true;
 
@@ -59,7 +54,6 @@ private:
     std::shared_ptr<Material<T>> material_;
     glm::vec3 center_;
     float radius_;
-    bool hollow_;
 
 };
 

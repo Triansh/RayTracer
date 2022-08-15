@@ -5,7 +5,6 @@
 #ifndef RAYTRACER_BVH_H
 #define RAYTRACER_BVH_H
 
-#include <iostream>
 #include <vector>
 #include <algorithm>
 
@@ -19,7 +18,6 @@ public:
 
     static bool
     compare_boxes(const std::shared_ptr<BaseHittable> &a, const std::shared_ptr<BaseHittable> &b, int axis);
-
 
 private:
     std::shared_ptr<BaseHittable> left_;

@@ -48,21 +48,7 @@ public:
         return {random(mini, maxi), random(mini, maxi), random(mini, maxi)};
     }
 
-    glm::vec3 random_cosine() {
-        auto v1 = random();
-        auto v2 = random();
-        auto root_v2 = sqrt(v2);
-        auto angle = 2 * glm::pi<float>() * v1;
-        return {
-                glm::cos(angle) * root_v2,
-                glm::sin(angle) * root_v2,
-                std::sqrt(1 - v2)
-        };
-    }
-
-    glm::vec3 random_in_unit_sphere() {
-        return glm::normalize(random_normal_vec());
-    }
+    glm::vec3 random_in_unit_sphere() { return glm::normalize(random_normal_vec()); }
 
     double random_normal() { return normal_random(); }
 

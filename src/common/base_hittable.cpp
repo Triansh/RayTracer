@@ -3,11 +3,6 @@
 //
 
 #include "base_hittable.h"
-//
-//void HitList::add(const std::shared_ptr<Hittable> &h) {
-//    bool is_emitter = std::static_pointer_cast<Light>(h->material()) != nullptr;
-//    hittables[is_emitter].push_back(h);
-//}
 
 bool HitList::hit_by_ray(const Ray &r, HitRecord &hr, float max_time) const {
     auto is_hit = false;
@@ -33,4 +28,8 @@ void HitList::set_bounding_box(const std::vector<std::shared_ptr<BaseHittable>> 
 void HitList::set_bounding_box() {
     set_bounding_box(hittables);
 
+}
+
+void HitList::add(const std::shared_ptr<BaseHittable> &h) {
+    hittables.push_back(h);
 }

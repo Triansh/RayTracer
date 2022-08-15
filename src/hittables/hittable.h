@@ -6,7 +6,6 @@
 #define RAYTRACER_HITTABLE_H
 
 #include <memory>
-#include <vector>
 
 #include "common/base_hittable.h"
 #include "common/ray.h"
@@ -28,10 +27,5 @@ public:
     }
 };
 
-
-
-//class Emitter : public Hittable, Light {
-//    Emitter(std::shared_ptr<Material> material, float intensity): Hittable(material), Light(material)
-//};
 
 #endif //RAYTRACER_HITTABLE_H

@@ -12,7 +12,6 @@ template<class T>
 class AxisAlignedRect : public Hittable<T, AxisAlignedRect> {
 
 public:
-//    AxisAlignedRect() : material_(nullptr) {}
 
     AxisAlignedRect(float x1, float y1, float x2, float y2, float k, Axis ax, std::shared_ptr<Material<T>> m,
                     bool flip = false)
@@ -29,14 +28,14 @@ public:
 
         glm::vec3 lower, upper;
         if (axis_ == X) {
-            lower = glm::vec3(-0, std::min(x1, x2), std::min(y1, y2));
-            upper = glm::vec3(+0, std::max(x1, x2), std::max(y1, y2));
+            lower = glm::vec3(k, std::min(x1, x2), std::min(y1, y2));
+            upper = glm::vec3(k, std::max(x1, x2), std::max(y1, y2));
         } else if (axis_ == Y) {
-            lower = glm::vec3(std::min(x1, x2), -0, std::min(y1, y2));
-            upper = glm::vec3(std::max(x1, x2), +0, std::max(y1, y2));
+            lower = glm::vec3(std::min(x1, x2), k, std::min(y1, y2));
+            upper = glm::vec3(std::max(x1, x2), k, std::max(y1, y2));
         } else if (axis_ == Z) {
-            lower = glm::vec3(std::min(x1, x2), std::min(y1, y2), -0);
-            upper = glm::vec3(std::max(x1, x2), std::max(y1, y2), +0);
+            lower = glm::vec3(std::min(x1, x2), std::min(y1, y2), k);
+            upper = glm::vec3(std::max(x1, x2), std::max(y1, y2), k);
         }
         this->bb_ = AABB(lower - EPSILON, upper + EPSILON);
     }
@@ -112,8 +111,6 @@ private:
 template<class T>
 class XYRect : public AxisAlignedRect<T> {
 public:
-//    XYRect() = default;
-
     XYRect(float x1, float y1, float x2, float y2, float k, std::shared_ptr<Material<T>> m, bool flip = false)
             : AxisAlignedRect<T>(x1, y1, x2, y2, k, Z, std::move(m), flip) {}
 };
@@ -122,8 +119,6 @@ public:
 template<class T>
 class YZRect : public AxisAlignedRect<T> {
 public:
-//    YZRect() = default;
-
     YZRect(float y1, float z1, float y2, float z2, float k, std::shared_ptr<Material<T>> m, bool flip = false)
             : AxisAlignedRect<T>(y1, z1, y2, z2, k, X, std::move(m), flip) {}
 
@@ -132,8 +127,6 @@ public:
 template<class T>
 class XZRect : public AxisAlignedRect<T> {
 public:
-//    XZRect() = default;
-
     XZRect(float x1, float z1, float x2, float z2, float k, std::shared_ptr<Material<T>> m, bool flip = false)
             : AxisAlignedRect<T>(x1, z1, x2, z2, k, Y, std::move(m), flip) {}
 

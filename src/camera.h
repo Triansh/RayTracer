@@ -5,11 +5,9 @@
 #ifndef RAYTRACER_CAMERA_H
 #define RAYTRACER_CAMERA_H
 
-#include <iostream>
 #include "common/ray.h"
 
-constexpr int IMAGE_HEIGHT = 400;
-//constexpr float ASPECT_RATIO =  16.0 / 9;
+constexpr int IMAGE_HEIGHT = 600;
 constexpr float ASPECT_RATIO = 1;
 constexpr int IMAGE_WIDTH = int(ASPECT_RATIO * IMAGE_HEIGHT);
 

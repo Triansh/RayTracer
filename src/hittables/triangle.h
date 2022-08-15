@@ -23,7 +23,7 @@ public:
         auto v3_v1 = v3_ - v1_;
         auto p_vec = glm::cross(r.direction(), v3_v1);
         float det = glm::dot(v2_v1, p_vec);
-        if (std::fabs(det) < EPSILON) return false;
+        if (std::abs(det) < EPSILON) return false;
 
         float inv_det = 1 / det;
 

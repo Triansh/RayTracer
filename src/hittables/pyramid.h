@@ -12,8 +12,7 @@
 template<class T>
 class Pyramid : public HitList {
 public:
-    Pyramid(float x1, float z1, float x2, float z2, float k, float height, const std::shared_ptr<Material<T>> &m)
-            : material_(m) {
+    Pyramid(float x1, float z1, float x2, float z2, float k, float height, const std::shared_ptr<Material<T>> &m) {
 
         auto v1 = glm::vec3(x1, k, z1);
         auto v2 = glm::vec3(x1, k, z2);
@@ -30,10 +29,6 @@ public:
 
         set_bounding_box();
     }
-
-private:
-    std::shared_ptr<Material<T>> material_;
-
 };
 
 

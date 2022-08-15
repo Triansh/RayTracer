@@ -11,8 +11,7 @@ template<typename T>
 class Box : public HitList {
 
 public:
-    Box(glm::vec3 lower, glm::vec3 upper, std::shared_ptr<Material<T>> m)
-            : material_(m) {
+    Box(glm::vec3 lower, glm::vec3 upper, std::shared_ptr<Material<T>> m) {
         float x1 = lower.x, y1 = lower.y, z1 = lower.z;
         float x2 = upper.x, y2 = upper.y, z2 = upper.z;
         add(std::make_shared<XYRect<T>>(x1, y1, x2, y2, z1, m));
@@ -24,9 +23,6 @@ public:
 
         set_bounding_box();
     }
-
-private:
-    std::shared_ptr<Material<T>> material_;
 };
 
 
